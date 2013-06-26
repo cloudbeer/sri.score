@@ -1,10 +1,10 @@
-<%@ page import="sri.score.TLevel" %>
+<%@ page import="sri.score.TProject" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta name="layout" content="main">
-    <g:set var="entityName" value="${message(code: 'TLevel.label', default: 'TLevel')}"/>
-    <title><g:message code="default.edit.label" args="[entityName]"/></title>
+    <g:set var="entityName" value="${message(code: 'TProject.label', default: 'TProject')}"/>
+    <title><g:message code="default.create.label" args="[entityName]"/></title>
 </head>
 
 <body>
@@ -28,11 +28,11 @@
     <li><a href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a>
         <span class="divider"><i class="icon-caret-right"></i></span>
     </li>
-    <li><g:link action="list"><g:message code="TLevel.label"/></g:link>
+    <li><g:link action="list"><g:message code="TProject.label"/></g:link>
         <span class="divider"><i class="icon-caret-right"></i></span>
     </li>
     <li>
-        <g:message code="default.edit.label" args="[entityName]"/>
+        <g:message code="default.create.label" args="[entityName]"/>
     </li>
 </ul>
 
@@ -43,7 +43,7 @@
         <div class="well widget">
             <!-- widget header -->
             <div class="widget-header">
-                <h3 class="title"><g:message code="default.edit.label" args="[entityName]"/></h3>
+                <h3 class="title"><g:message code="default.new.label" args="[entityName]"/></h3>
 
                 <div class="widget-nav">
                     <ul class="nav nav-pills">
@@ -58,34 +58,27 @@
             <!-- widget content -->
             <div class="widget-content">
 
-
-
-                <div id="edit-TLevel" class="content scaffold-edit" role="main">
+                <div id="create-TProject" class="content scaffold-create" role="main">
                     <g:if test="${flash.message}">
                         <div class="message" role="status">${flash.message}</div>
                     </g:if>
-                    <g:hasErrors bean="${TLevelInstance}">
+                    <g:hasErrors bean="${TProjectInstance}">
                         <ul class="errors" role="alert">
-                            <g:eachError bean="${TLevelInstance}" var="error">
+                            <g:eachError bean="${TProjectInstance}" var="error">
                                 <li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message
                                         error="${error}"/></li>
                             </g:eachError>
                         </ul>
                     </g:hasErrors>
-                    <g:form method="post">
-                        <g:hiddenField name="id" value="${TLevelInstance?.id}"/>
-                        <g:hiddenField name="version" value="${TLevelInstance?.version}"/>
+                    <g:form action="save" class="">
                         <fieldset class="form">
-                            <g:render template="form"/>
+                            <g:render template="form_apply"/>
                         </fieldset>
-                        <fieldset class="buttons">
-                            <g:actionSubmit class="save btn btn-primary" action="update"
-                                            value="${message(code: 'default.button.update.label', default: 'Update')}"/>
-                            <g:actionSubmit class="delete btn btn-cg" action="delete"
-                                            value="${message(code: 'default.button.delete.label', default: 'Delete')}"
-                                            formnovalidate=""
-                                            onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');"/>
-                        </fieldset>
+
+                        <div class="buttons">
+                            <g:submitButton name="create" class="btn btn-primary"
+                                            value="${message(code: 'default.button.create.label', default: 'Create')}"/>
+                        </div>
                     </g:form>
                 </div>
 
@@ -93,5 +86,6 @@
         </div>
     </div>
 </div>
+
 </body>
 </html>

@@ -1,0 +1,23 @@
+ul.show {
+    list-style: none
+}
+
+ul.show li {
+    padding: 5px;
+}
+ul.show li:hover {
+    background: #eee;
+}
+
+ul.show li .key {
+    width: 100px;
+    padding-right: 5px;
+    display: inline-block;
+    color: #333;
+    font-weight: bold
+}
+ul.show li .key:after {
+    content: ': '
+}
+ul.show li .value {
+}

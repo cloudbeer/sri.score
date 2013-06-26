@@ -1,5 +1,5 @@
 body {
-	font-family: 'DroidSansRegular', Helvetica, Arial, sans-serif;
+	font-family: 'Microsoft YaHei', SimSun, Helvetica, Arial, sans-serif;
 	margin:0;
 	padding:0;
 	background-color:#404040;
@@ -12,30 +12,30 @@ h3,
 h4, 
 h5, 
 h6 {
-	font-family: 'BebasNeueRegular', Helvetica, Arial, sans-serif;
+	font-family: 'Microsoft YaHei', SimSun, Helvetica, Arial, sans-serif;
 	font-weight:normal;
 }
 h5 {font-size:16px;}
 h6 {font-size:14px;}
 hr {border-top-color: #dedede;}
 .lead {
-	font-family: 'dekarregular', Helvetica, Arial, sans-serif;
+	font-family: 'Microsoft YaHei', Helvetica, Arial, sans-serif;
 	font-weight:normal;
 	font-size:24px;
 }
 .lead.center {text-align:center;}
 .nav-header {font-size: 16px;}
 blockquote p {
-	font-family: Georgia, Helvetica, Arial, sans-serif;
+	font-family: SimSun, Georgia, Helvetica, Arial, sans-serif;
 	font-size:22px;
 	font-style:italic;
 }
 blockquote small {
-	font-family: Helvetica, Arial, sans-serif;
+	font-family: SimSun, Helvetica, Arial, sans-serif;
 	font-size:11px;
 }
 address strong {
-	font-family: 'YanoneKaffeesatzRegular', Helvetica, Arial, sans-serif;
+	font-family: 'Microsoft YaHei', SimHei, Helvetica, Arial, sans-serif;
 	font-weight:normal;
 	font-size:200%;
 }
@@ -43,7 +43,7 @@ address strong {
 /*description list*/
 dt {
 	margin-top:10px;
-	font-family: 'YanoneKaffeesatzRegular', Helvetica, Arial, sans-serif;
+	font-family: 'Microsoft YaHei',SimHei, Helvetica, Arial, sans-serif;
 	font-weight:normal;
 	font-size:20px;
 }
@@ -101,11 +101,11 @@ dl.dl-inline [class*=" micon-"] {
 input, 
 button, 
 select, 
-textarea {font-family: 'DroidSansRegular', Helvetica, Arial, sans-serif;}
+textarea {font-family: 'Microsoft YaHei', 'DroidSansRegular', Helvetica, Arial, sans-serif;}
 
 /*table*/
 .table thead th {
-	font-family: 'YanoneKaffeesatzRegular', Helvetica, Arial, sans-serif;
+	font-family: 'Microsoft YaHei',SimHei, Helvetica, Arial, sans-serif;
 	font-weight:normal;
 	font-size:20px;
 }

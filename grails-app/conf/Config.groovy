@@ -26,6 +26,8 @@ grails.mime.types = [
     multipartForm: 'multipart/form-data',
     rss:           'application/rss+xml',
     text:          'text/plain',
+    svg:           'image/svg+xml',
+    woff:          'application/x-font-woff',
     xml:           ['text/xml', 'application/xml']
 ]
 

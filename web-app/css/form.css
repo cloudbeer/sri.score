@@ -659,16 +659,16 @@ div.uploader input {opacity: 0;position: absolute;top: 0;right: 0;bottom: 0;floa
 	padding-right: 15px;
 }
 .chzn-rtl.chzn-container-active .chzn-single-with-drop div {border-right: none;}
-.chzn-rtl .chzn-search input {
-	background: #fff url('../images/chosen-sprite.png') no-repeat -38px -22px;
-	background: url('../images/chosen-sprite.png') no-repeat -38px -22px, -webkit-gradient(linear, 0 0, 0 100%, color-stop(1%, #eeeeee), color-stop(15%, #ffffff));
-	background: url('../images/chosen-sprite.png') no-repeat -38px -22px, -webkit-linear-gradient(top, #eeeeee 1%, #ffffff 15%);  
-	background: url('../images/chosen-sprite.png') no-repeat -38px -22px, -moz-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
-	background: url('../images/chosen-sprite.png') no-repeat -38px -22px, -o-linear-gradient(top, #eeeeee 1%, #ffffff 15%);
-	background: url('../images/chosen-sprite.png') no-repeat -38px -22px, linear-gradient(#eeeeee 1%, #ffffff 15%);
-	padding: 4px 5px 4px 20px;
-	direction: rtl;
-}
+/*.chzn-rtl .chzn-search input {*/
+	/*background: #fff url('../images/chosen-sprite.png') no-repeat -38px -22px;*/
+	/*background: url('../images/chosen-sprite.png') no-repeat -38px -22px, -webkit-gradient(linear, 0 0, 0 100%, color-stop(1%, #eeeeee), color-stop(15%, #ffffff));*/
+	/*background: url('../images/chosen-sprite.png') no-repeat -38px -22px, -webkit-linear-gradient(top, #eeeeee 1%, #ffffff 15%);  */
+	/*background: url('../images/chosen-sprite.png') no-repeat -38px -22px, -moz-linear-gradient(top, #eeeeee 1%, #ffffff 15%);*/
+	/*background: url('../images/chosen-sprite.png') no-repeat -38px -22px, -o-linear-gradient(top, #eeeeee 1%, #ffffff 15%);*/
+	/*background: url('../images/chosen-sprite.png') no-repeat -38px -22px, linear-gradient(#eeeeee 1%, #ffffff 15%);*/
+	/*padding: 4px 5px 4px 20px;*/
+	/*direction: rtl;*/
+/*}*/
 .widget-nav .chzn-container {
 	width:243px;
 	margin-right:10px;
@@ -681,3 +681,6 @@ div.uploader input {opacity: 0;position: absolute;top: 0;right: 0;bottom: 0;floa
 	height:16px;
 	border:1px solid #aaa;
 }
+
+.buttons{margin: 10px 4px;}
+.btn{color:#fff}

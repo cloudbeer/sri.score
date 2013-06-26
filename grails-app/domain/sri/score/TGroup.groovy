@@ -9,7 +9,7 @@ class TGroup {
     Date update_date = new Date()
     int updater
     String title
-    long parent_id
+    int parent_id
     int leader
     static constraints = {
         title blank: false
@@ -20,5 +20,6 @@ class TGroup {
         update_date display: false
         updater display: false
         leader display: false
-    }}
+    }
+}
 

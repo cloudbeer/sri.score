@@ -26,7 +26,7 @@ class TLevelController {
             return
         }
 
-        flash.message = message(code: 'default.created.message', args: [message(code: 'TLevel.label', default: 'TLevel'), TLevelInstance.id])
+        flash.message = message(code: 'default.created.message', args: [message(code: 'TLevel.label', default: 'TLevel'), TLevelInstance.title])
         redirect(action: "show", id: TLevelInstance.id)
     }
 

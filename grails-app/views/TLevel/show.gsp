@@ -1,135 +1,121 @@
-
 <%@ page import="sri.score.TLevel" %>
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta name="layout" content="main">
-		<g:set var="entityName" value="${message(code: 'TLevel.label', default: 'TLevel')}" />
-		<title><g:message code="default.show.label" args="[entityName]" /></title>
-	</head>
-	<body>
-		<a href="#show-TLevel" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div class="nav" role="navigation">
-			<ul>
-				<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-				<li><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-			</ul>
-		</div>
-		<div id="show-TLevel" class="content scaffold-show" role="main">
-			<h1><g:message code="default.show.label" args="[entityName]" /></h1>
-			<g:if test="${flash.message}">
-			<div class="message" role="status">${flash.message}</div>
-			</g:if>
-			<ol class="property-list TLevel">
-			
-				<g:if test="${TLevelInstance?.coefficient}">
-				<li class="fieldcontain">
-					<span id="coefficient-label" class="property-label"><g:message code="TLevel.coefficient.label" default="Coefficient" /></span>
-					
-						<span class="property-value" aria-labelledby="coefficient-label"><g:fieldValue bean="${TLevelInstance}" field="coefficient"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${TLevelInstance?.create_date}">
-				<li class="fieldcontain">
-					<span id="create_date-label" class="property-label"><g:message code="TLevel.create_date.label" default="Createdate" /></span>
-					
-						<span class="property-value" aria-labelledby="create_date-label"><g:formatDate date="${TLevelInstance?.create_date}" /></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${TLevelInstance?.creator}">
-				<li class="fieldcontain">
-					<span id="creator-label" class="property-label"><g:message code="TLevel.creator.label" default="Creator" /></span>
-					
-						<span class="property-value" aria-labelledby="creator-label"><g:fieldValue bean="${TLevelInstance}" field="creator"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${TLevelInstance?.method}">
-				<li class="fieldcontain">
-					<span id="method-label" class="property-label"><g:message code="TLevel.method.label" default="Method" /></span>
-					
-						<span class="property-value" aria-labelledby="method-label"><g:fieldValue bean="${TLevelInstance}" field="method"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${TLevelInstance?.min_score}">
-				<li class="fieldcontain">
-					<span id="min_score-label" class="property-label"><g:message code="TLevel.min_score.label" default="Minscore" /></span>
-					
-						<span class="property-value" aria-labelledby="min_score-label"><g:fieldValue bean="${TLevelInstance}" field="min_score"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${TLevelInstance?.score_config}">
-				<li class="fieldcontain">
-					<span id="score_config-label" class="property-label"><g:message code="TLevel.score_config.label" default="Scoreconfig" /></span>
-					
-						<span class="property-value" aria-labelledby="score_config-label"><g:fieldValue bean="${TLevelInstance}" field="score_config"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${TLevelInstance?.title}">
-				<li class="fieldcontain">
-					<span id="title-label" class="property-label"><g:message code="TLevel.title.label" default="Title" /></span>
-					
-						<span class="property-value" aria-labelledby="title-label"><g:fieldValue bean="${TLevelInstance}" field="title"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${TLevelInstance?.update_date}">
-				<li class="fieldcontain">
-					<span id="update_date-label" class="property-label"><g:message code="TLevel.update_date.label" default="Updatedate" /></span>
-					
-						<span class="property-value" aria-labelledby="update_date-label"><g:formatDate date="${TLevelInstance?.update_date}" /></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${TLevelInstance?.updater}">
-				<li class="fieldcontain">
-					<span id="updater-label" class="property-label"><g:message code="TLevel.updater.label" default="Updater" /></span>
-					
-						<span class="property-value" aria-labelledby="updater-label"><g:fieldValue bean="${TLevelInstance}" field="updater"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${TLevelInstance?.xstatus}">
-				<li class="fieldcontain">
-					<span id="xstatus-label" class="property-label"><g:message code="TLevel.xstatus.label" default="Xstatus" /></span>
-					
-						<span class="property-value" aria-labelledby="xstatus-label"><g:fieldValue bean="${TLevelInstance}" field="xstatus"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${TLevelInstance?.xtype}">
-				<li class="fieldcontain">
-					<span id="xtype-label" class="property-label"><g:message code="TLevel.xtype.label" default="Xtype" /></span>
-					
-						<span class="property-value" aria-labelledby="xtype-label"><g:fieldValue bean="${TLevelInstance}" field="xtype"/></span>
-					
-				</li>
-				</g:if>
-			
-			</ol>
-			<g:form>
-				<fieldset class="buttons">
-					<g:hiddenField name="id" value="${TLevelInstance?.id}" />
-					<g:link class="edit" action="edit" id="${TLevelInstance?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
-					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
-				</fieldset>
-			</g:form>
-		</div>
-	</body>
+<head>
+    <meta name="layout" content="main">
+    <g:set var="entityName" value="${message(code: 'TLevel.label', default: 'TLevel')}"/>
+    <title><g:message code="default.show.label" args="[entityName]"/></title>
+</head>
+
+<body>
+
+<div class="page-heading">
+    <h2 class="page-title muted">
+        <i class="icon-dashboard"></i>
+        <g:message code="default.show.label" args="[entityName]"/>
+    </h2>
+
+    <div class="page-info hidden-phone">
+        <ul class="stats">
+            <li>
+                <span><g:link class="create" action="list" class="large text-warning"><g:message
+                        code="default.list.label"
+                        args="[entityName]"/></g:link></span>
+            </li>
+        </ul>
+
+    </div>
+</div>
+<ul class="breadcrumb breadcrumb-main">
+    <li><a href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a>
+        <span class="divider"><i class="icon-caret-right"></i></span>
+    </li>
+    <li><g:link action="list"><g:message code="TLevel.label"/></g:link>
+        <span class="divider"><i class="icon-caret-right"></i></span>
+    </li>
+    <li>
+        <g:message code="default.show.label" args="[entityName]"/>
+    </li>
+</ul>
+
+
+<div class="row-fluid">
+    <div class="span12">
+
+        <!-- widget -->
+        <div class="well widget">
+            <!-- widget header -->
+            <div class="widget-header">
+                <h3 class="title"><g:message code="default.show.label" args="[entityName]"/></h3>
+
+                <div class="widget-nav">
+                    <ul class="nav nav-pills">
+                        <li><g:link class="btn" action="create"><g:message
+                                code="default.create.label"
+                                args="[entityName]"/></g:link></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- ./ widget header -->
+
+            <!-- widget content -->
+            <div class="widget-content">
+
+                <div id="show-TLevel" class="content scaffold-show" role="main">
+                    <g:if test="${flash.message}">
+                        <div class="message" role="status">${flash.message}</div>
+                    </g:if>
+                    <ul class="show">
+                        <li>
+                            <span class="key"><g:message code="TLevel.title.label" default="title"/></span>
+                            <span class="value">
+                                <g:if test="${TLevelInstance?.title}">
+                                    <g:fieldValue bean="${TLevelInstance}" field="title"/>
+                                </g:if>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="key"><g:message code="TLevel.min_score.label" default="min_score"/></span>
+                            <span class="value">
+                                <g:if test="${TLevelInstance?.min_score}">
+                                    <g:fieldValue bean="${TLevelInstance}" field="min_score"/>
+                                </g:if>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="key"><g:message code="TLevel.coefficient.label" default="coefficient"/></span>
+                            <span class="value">
+                                <g:if test="${TLevelInstance?.coefficient}">
+                                    <g:fieldValue bean="${TLevelInstance}" field="coefficient"/>
+                                </g:if>
+                            </span>
+                        </li>
+                        <li>
+                            <span class="key"><g:message code="TLevel.create_date.label" default="create_date"/></span>
+                            <span class="value">
+                                <g:if test="${TLevelInstance?.create_date}">
+                                    <g:fieldValue bean="${TLevelInstance}" field="create_date"/>
+                                </g:if>
+                            </span>
+                        </li>
+                    </ul>
+
+                    <g:form>
+                        <fieldset class="buttons">
+                            <g:hiddenField name="id" value="${TLevelInstance?.id}"/>
+                            <g:link class="edit btn btn-primary" action="edit" id="${TLevelInstance?.id}"><g:message
+                                    code="default.button.edit.label" default="Edit"/></g:link>
+
+                            <g:actionSubmit class="btn btn-cg" action="delete"
+                                            value="${message(code: 'default.button.delete.label', default: 'Delete')}"
+                                            onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');"/>
+                        </fieldset>
+                    </g:form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
 </html>
