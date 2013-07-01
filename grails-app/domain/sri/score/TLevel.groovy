@@ -20,6 +20,6 @@ class TLevel {
         method blank: true
         score_config blank: true
         coefficient min: 1.0
-        min_score min: 1
+        min_score min: 0
     }
 }

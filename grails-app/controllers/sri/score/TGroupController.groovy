@@ -6,6 +6,24 @@ class TGroupController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
+    def beforeInterceptor ={
+        if (!session.user) {
+            redirect(action: 'login', controller: 'account')
+            return false
+        }
+        if (!session.user.is_admin()) {
+            flash.tips_title = "权限不足"
+            flash.message = "请确认您是否有权限，如果有问题请联系管理员。"
+            redirect(action: 'tips', controller: 'message')
+            //throw new Exception("没有权限")
+            //render "没有权限"
+            return false
+        }
+    }
+
+    def afterInterceptor = {
+        flash.menu_flag="sys"
+    }
     def index() {
         redirect(action: "list", params: params)
     }

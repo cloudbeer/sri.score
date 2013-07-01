@@ -60,7 +60,11 @@
 
                 <div id="create-TGroup" class="content scaffold-create" role="main">
                     <g:if test="${flash.message}">
-                        <div class="message" role="status">${flash.message}</div>
+                        <div class="alert alert-block alert-error">
+                            <a class="close" data-dismiss="alert" href="#"><i class="icon-large icon-remove-circle"></i></a>
+                            <h4 class="alert-heading"><g:message code="default.tip.label" default="出错了"/></h4>
+                            ${flash.message}
+                        </div>
                     </g:if>
                     <g:hasErrors bean="${TGroupInstance}">
                         <ul class="errors" role="alert">

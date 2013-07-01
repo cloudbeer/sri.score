@@ -19,6 +19,7 @@ modules = {
         resource url:'css/dropdowns.css'
         resource url:'css/widgets.css'
         resource url:'css/form.css'
+        resource url:'css/buttons.css'
         resource url:'css/addon-styles.css'
         resource url:'css/kuta-responsive.css'
     }

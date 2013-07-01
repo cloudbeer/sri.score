@@ -47,7 +47,7 @@
 
                 <div class="widget-nav">
                     <ul class="nav nav-pills">
-                        <li><g:link class="btn" action="create"><g:message
+                        <li><g:link class="btn btn-flat btn-mini" action="create"><g:message
                                 code="default.create.label"
                                 args="[entityName]"/></g:link></li>
                     </ul>
@@ -61,8 +61,13 @@
 
 
                 <div id="edit-TLevel" class="content scaffold-edit" role="main">
+
                     <g:if test="${flash.message}">
-                        <div class="message" role="status">${flash.message}</div>
+                        <div class="alert alert-block alert-error">
+                            <a class="close" data-dismiss="alert" href="#"><i class="icon-large icon-remove-circle"></i></a>
+                            <h4 class="alert-heading"><g:message code="default.tip.label" default="出错了"/></h4>
+                            ${flash.message}
+                        </div>
                     </g:if>
                     <g:hasErrors bean="${TLevelInstance}">
                         <ul class="errors" role="alert">

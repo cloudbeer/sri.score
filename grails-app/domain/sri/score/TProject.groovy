@@ -31,4 +31,21 @@ class TProject {
         updater display: false
 
     }
+
+    def is_manager(user) {
+        if (!user)
+            return false
+        if (user.id == creator || user.id == manager)
+            return true
+        return false
+    }
+
+    def is_approver(user) {
+        if (!user)
+            return false
+        if (user.id == approver)
+            return true
+        return false
+
+    }
 }

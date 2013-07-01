@@ -65,11 +65,12 @@
                 <ul class="dropdown-menu dropdown-user-account">
 
                     <li class="account-img-container">
-                        <img class="thumb account-img" src="http://b.zol-img.com.cn/soft/6_120x90/408/ceHc4ZoyYxgME.gif"/>
+                        <img class="thumb account-img"
+                             src="http://b.zol-img.com.cn/soft/6_120x90/408/ceHc4ZoyYxgME.gif"/>
                     </li>
 
                     <li class="account-info">
-                        <h3>谢正伟</h3>
+                        <h3>${session.user?.nick}</h3>
 
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
 
@@ -83,7 +84,7 @@
                             </div>
 
                             <div class="span4 align-right">
-                                <g:link controller="tuser" action="logout"
+                                <g:link controller="account" action="logout"
                                         class="btn btn-small btn-danger btn-flat">退出</g:link>
                             </div>
 
@@ -117,78 +118,94 @@
         <li class="avatar hidden-phone">
             <a href="#">
                 <img src="http://image.ladypk.com/face/user/82/40/82406_55">
-                <span>谢正伟</span>
+                <span>${session.user?.nick}</span>
             </a>
         </li>
-        <li class="active">
-            <a href="<g:createLinkTo dir="/myhome"/> ">
-                <i class="micon-screen"></i>
-                <span class="hidden-phone">我的面板</span>
-            </a>
+        <li class="active" rel="mine">
+            <g:link controller="mine">
+                <i class="micon-dashboard"></i>
+                <span class="hidden-phone">仪表盘</span>
+            </g:link>
         </li>
-        <li class="dropdown">
+        <li class="dropdown" rel="project">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <i class="micon-gift"></i>
-                <span class="hidden-phone">项目</span>
+                <i class="micon-dribbble"></i>
+                <span class="hidden-phone">任务</span>
             </a>
             <ul class="dropdown-menu">
                 <li>
-                    <g:link controller="TProject" action="apply">
-                        <i class="icon-large icon-underline"></i>
-                        创建项目
+                    <g:link controller="TProject" action="list">
+                        <i class="icon-large micon-dribbble"></i>
+                        任务包管理
+                    </g:link>
+                </li>
+                <li>
+                    <g:link controller="Mine" action="tasks">
+                        <i class="icon-large icon-tasks"></i>
+                        我的任务
+                    </g:link>
+                </li>
+            </ul>
+        </li>
+        <g:if test="${session.user?.is_admin()}">
+            <li class="dropdown" rel="sys">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="micon-wrench"></i>
+                    <span class="hidden-phone">管理</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <g:link controller="TSys" action="score">
+                            <i class="icon-large micon-seven-segment-9"></i>
+                            事物积分
+                        </g:link>
+                    </li>
+                    <li>
+                        <g:link controller="TSys" action="import_attendance">
+                            <i class="icon-large micon-bell-3"></i>
+                            考勤积分
+                        </g:link>
+                    </li>
+                    <li>
+                        <g:link controller="TSys" action="init_level">
+                            <i class="icon-large micon-clipboard-2"></i>
+                            等级初始化
+                        </g:link>
+                    </li>
+                    <li>
+                        <g:link controller="TSys" action="projects">
+                            <i class="icon-large micon-clipboard-2"></i>
+                            积分条目
+                        </g:link>
+                    </li>
 
-                    </g:link>
-                </li>
-                <li>
-                    <a href="tables.html">
-                        <i class="icon-large icon-table"></i>
-                        项目查询
-                    </a>
-                </li>
-                <li>
-                    <a href="buttons.html">
-                        <i class="icon-large icon-th"></i> 我的项目
-                    </a>
-                </li>
-                <li>
-                    <a href="icons.html">
-                        <i class="icon-large icon-check-empty"></i> 我的任务
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <i class="micon-gift"></i>
-                <span class="hidden-phone">管理</span>
-            </a>
-            <ul class="dropdown-menu">
-                <li>
-                    <a href="tables.html">
-                        <i class="icon-large icon-table"></i>
-                        增减积分
-                    </a>
-                </li>
-                <li>
-                    <g:link controller="TLevel">
-                        <i class="icon-large icon-underline"></i>
-                        等级管理
-                    </g:link>
-                </li>
-                <li>
-                    <a href="<g:createLinkTo dir="/TGroup/"/>">
-                        <i class="icon-large icon-underline"></i>
-                        部门管理
-                    </a>
-                </li>
-                <li>
-                    <g:link controller="TUser">
-                        <i class="icon-large icon-underline"></i>
-                        用户管理
-                    </g:link>
-                </li>
-            </ul>
-        </li>
+                    <li>
+                        <g:link controller="TLevel">
+                            <i class="icon-large micon-diamond"></i>
+                            等级管理
+                        </g:link>
+                    </li>
+                    <li>
+                        <g:link controller="TGroup">
+                            <i class="icon-large icon-group"></i>
+                            部门管理
+                        </g:link>
+                    </li>
+                    <li>
+                        <g:link controller="TUser">
+                            <i class="icon-large icon-user"></i>
+                            用户管理
+                        </g:link>
+                    </li>
+                    <li>
+                        <g:link controller="TSys" action="config">
+                            <i class="icon-large micon-cog"></i>
+                            系统配置
+                        </g:link>
+                    </li>
+                </ul>
+            </li>
+        </g:if>
     </ul>
     <!-- end sidebar -->
 </div>
@@ -197,5 +214,23 @@
 
 <g:javascript library="application"/>
 <r:layoutResources/>
+<script type="text/javascript">
+    $(function () {
+        var cur_Controller = "${flash.menu_flag?:"mine"}";
+        $("#sidebar>li").removeClass("active");
+        $("#sidebar>li").each(function () {
+            var xflag = $(this).attr("rel");
+            if (xflag) {
+                if (xflag.indexOf(cur_Controller) >= 0) {
+                    $(this).addClass("active");
+                }
+            }
+        });
+
+//        if (!$("#sidebar>li").hasClass("active"))  {
+//            $("#sidebar>li[rel='sys']").addClass("active");
+//        }
+    });
+</script>
 </body>
 </html>

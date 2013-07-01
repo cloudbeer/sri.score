@@ -1,23 +1,23 @@
-ul.show {
+table.show {
     list-style: none
 }
 
-ul.show li {
+table.show tr {
     padding: 5px;
 }
-ul.show li:hover {
+table.show tr:hover {
     background: #eee;
 }
 
-ul.show li .key {
+table.show tr .key {
     width: 100px;
     padding-right: 5px;
     display: inline-block;
     color: #333;
     font-weight: bold
 }
-ul.show li .key:after {
+table.show tr .key:after {
     content: ': '
 }
-ul.show li .value {
+table.show tr .value {
 }

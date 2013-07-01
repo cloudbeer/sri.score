@@ -1,30 +1,57 @@
 package sri.score
 
 import org.springframework.dao.DataIntegrityViolationException
+import sri.score.common.Constants
 
 class TProjectController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
+
+    def afterInterceptor = {
+        flash.menu_flag = "project"
+    }
+    def beforeInterceptor = {
+        if (!session.user) {
+            redirect(action: 'login', controller: 'account')
+            return false
+        }
+    }
+
 
     def index() {
         redirect(action: "list", params: params)
     }
 
     def list(Integer max) {
+
+        def q_param = [:]
+        def cond = "from TProject as ti where (ti.creator=:uid or ti.manager=:uid) and xtype=:type"
+        int me_id = session?.user?.id ?: 0
+        q_param.put("uid", me_id)
+        q_param.put("type", Constants.PROJECTTYPES_TASK)
+
+        def ds_count = TProject.executeQuery("select count(*) as cnt " + cond, q_param);
+        int xcount = 0
+        if (ds_count)
+            xcount=ds_count[0]
+
+
         params.max = Math.min(max ?: 10, 100)
-        [TProjectInstanceList: TProject.list(params), TProjectInstanceTotal: TProject.count()]
+        [TProjectInstanceList: TProject.findAll(cond, q_param, [max: 50, order: "desc", sort: "id"]),
+                TProjectInstanceTotal: xcount]
     }
 
     def create() {
         [TProjectInstance: new TProject(params)]
     }
 
-    def apply(){
+    def apply() {
         [TProjectInstance: new TProject(params)]
     }
 
     def save() {
         def TProjectInstance = new TProject(params)
+        TProjectInstance.creator = session.user?.id ?: 0
         if (!TProjectInstance.save(flush: true)) {
             render(view: "create", model: [TProjectInstance: TProjectInstance])
             return
@@ -32,6 +59,24 @@ class TProjectController {
 
         flash.message = message(code: 'default.created.message', args: [message(code: 'TProject.label', default: 'TProject'), TProjectInstance.id])
         redirect(action: "show", id: TProjectInstance.id)
+    }
+
+    def save_manager() {
+        def col = params.col
+        def user_id = params.user_id?.toInteger()
+        def project_id = params.id?.toLong()
+        def xproject = TProject.get(project_id)
+        //xproject.id = project_id
+        if (col == "manager")
+            xproject.manager = user_id
+        else
+            xproject.approver = user_id
+
+        if (!xproject.save(flush: true)) {
+            render 0
+        } else {
+            render 1
+        }
     }
 
     def show(Long id) {
@@ -42,7 +87,10 @@ class TProjectController {
             return
         }
 
-        [TProjectInstance: TProjectInstance]
+        def tasks_query = TIssue.where { project_id == id };
+        def tasks = tasks_query.list(sort: "score", order: "desc")
+
+        [TProjectInstance: TProjectInstance, tasks: tasks]
     }
 
     def edit(Long id) {
@@ -67,8 +115,8 @@ class TProjectController {
         if (version != null) {
             if (TProjectInstance.version > version) {
                 TProjectInstance.errors.rejectValue("version", "default.optimistic.locking.failure",
-                          [message(code: 'TProject.label', default: 'TProject')] as Object[],
-                          "Another user has updated this TProject while you were editing")
+                        [message(code: 'TProject.label', default: 'TProject')] as Object[],
+                        "Another user has updated this TProject while you were editing")
                 render(view: "edit", model: [TProjectInstance: TProjectInstance])
                 return
             }
@@ -90,6 +138,13 @@ class TProjectController {
         if (!TProjectInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'TProject.label', default: 'TProject'), id])
             redirect(action: "list")
+            return
+        }
+
+        def onIssue = TIssue.findByProject_id(id)
+        if (onIssue) {
+            flash.message = "此项目存在子任务，不能被删除"
+            redirect(action: "show", id: id)
             return
         }
 
