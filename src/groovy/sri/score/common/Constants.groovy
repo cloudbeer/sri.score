@@ -10,7 +10,8 @@ public class Constants {
     public static final int PROJECTTYPES_STATIC = 1
     public static final int PROJECTTYPES_TASK = 2
     public static final int PROJECTTYPES_LEVEL = 3
-    public static final int PROJECTTYPES_CUSTOM = 4
+    public static final int PROJECTTYPES_ATTENDANCE = 4
+    public static final int PROJECTTYPES_CUSTOM = 5
 
 
     public static final int PROJECTSTATUS_OUTSTANDING = 1 << 0   //未处理

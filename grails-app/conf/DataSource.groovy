@@ -13,7 +13,7 @@ hibernate {
 environments {
     development {
         dataSource {
-            dbCreate = "validate" // one of 'create', 'create-drop', 'update', 'validate', ''
+            dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
             //url = "jdbc:h2:mem:devDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
             url = "jdbc:mysql://localhost/sri.score?useUnicode=true&amp;characterEncoding=UTF8 "
         }
@@ -21,13 +21,13 @@ environments {
     test {
         dataSource {
             dbCreate = "validate"
-            url = "jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
+            url = "jdbc:mysql://localhost/sri.score?useUnicode=true&amp;characterEncoding=UTF8 "
         }
     }
     production {
         dataSource {
             dbCreate = "validate"
-            url = "jdbc:h2:prodDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
+            url = "jdbc:mysql://localhost/sri.score?useUnicode=true&amp;characterEncoding=UTF8 "
             pooled = true
             properties {
                maxActive = -1

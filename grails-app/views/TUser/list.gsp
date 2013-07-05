@@ -14,17 +14,6 @@
         <i class="icon-user"></i>
         <g:message code="default.list.label" args="[entityName]"/>
     </h2>
-
-    <div class="page-info hidden-phone">
-        <ul class="stats">
-            <li>
-                <span><g:link class="create" action="create" class="large text-warning"><g:message
-                        code="default.new.label"
-                        args="[entityName]"/></g:link></span>
-            </li>
-        </ul>
-
-    </div>
 </div>
 <ul class="breadcrumb breadcrumb-main">
     <li><a href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a>
@@ -63,6 +52,7 @@
                         <th>${message(code: 'TUser.email.label', default: 'Email')}</th>
                         <th>${message(code: 'TUser.user_code.label', default: '工号')}</th>
                         <th>${message(code: 'TUser.score.label', default: '得分')}</th>
+                        <th style="text-align: center;">${message(code: 'TUser.level_id.label', default: '等级')}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -72,8 +62,11 @@
                             <td><g:link action="show"
                                         id="${TUserInstance.id}">${fieldValue(bean: TUserInstance, field: "nick")}</g:link></td>
                             <td>${fieldValue(bean: TUserInstance, field: "email")}</td>
-                            <td>${fieldValue(bean: TUserInstance, field: "user_code")}</td>
-                            <td>${fieldValue(bean: TUserInstance, field: "score")}</td>
+                            <td >${fieldValue(bean: TUserInstance, field: "user_code")}</td>
+                            <td style="text-align: right;">${fieldValue(bean: TUserInstance, field: "score")}</td>
+                            <td style="text-align: center;">
+                                <g:levelname level_id="${fieldValue(bean: TUserInstance, field: "level_id")}"></g:levelname>
+                            </td>
 
                         </tr>
                     </g:each>

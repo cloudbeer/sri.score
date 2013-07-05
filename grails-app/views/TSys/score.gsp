@@ -34,8 +34,7 @@
 </ul>
 
 <div class="row-fluid">
-    <div class="span12">
-
+    <div class="span7">
         <!-- widget -->
         <div class="well widget">
             <!-- widget header -->
@@ -99,6 +98,28 @@
 
         </div>
     </div>
+
+    <div class="span5">
+
+        <div class="well widget">
+            <!-- widget header -->
+            <div class="widget-header">
+                <h3 class="title">查看概况</h3>
+
+                <div class="widget-nav">
+                    <ul class="nav nav-pills">
+                        <li></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- ./ widget header -->
+
+            <!-- widget content -->
+            <div class="widget-content">
+                <div id='xpre_score'></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -108,12 +129,30 @@
         $("#nick_ref").val(chosen_user_nick);
         $("#user_id").val(chosen_user_id);
         $("#choose_user_form").modal('hide');
+        getPreScore();
     }
     $(function () {
         $("#btnChooseUser").click(function () {
             chosenUserCallBack = setUser;
         });
+
+        $("#project_id").change(function () {
+            getPreScore();
+        });
+        getPreScore();
     });
+
+    function getPreScore() {
+        var pid = parseInt($("#project_id").val())
+        if (chosen_user_id > 0 && pid > 0) {
+            $.post("${createLink(controller: "TSys", action: "query_pre_score")}",
+                    {pid: pid, uid: chosen_user_id},
+                    function (res) {
+                        $("#xpre_score").html(res);
+                    });
+        }
+
+    }
 </script>
 </body>
 </html>

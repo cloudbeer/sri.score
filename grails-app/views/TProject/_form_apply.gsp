@@ -6,13 +6,21 @@
         <g:message code="TProject.title.label" default="Title"/>
         <span class="required-indicator">*</span>
     </label>
-    <g:textField name="title" required="" value="${TProjectInstance?.title}"/>
+    <g:textField class="span9" name="title" required="" value="${TProjectInstance?.title}"/>
 </div>
+
+<div class="fieldcontain ${hasErrors(bean: TProjectInstance, field: 'zentao_id', 'error')} ">
+    <label for="description">
+        预计完成时间
+    </label>
+    <g:textField name="end_date_temp1" class="datepicker" value="${TProjectInstance?.end_date1}" readonly="true"/>
+</div>
+
 <div class="fieldcontain ${hasErrors(bean: TProjectInstance, field: 'zentao_id', 'error')} ">
     <label for="description">
         <g:message code="TProject.zentao_id.label" default="Zentao ID"/>
     </label>
-    <g:textField name="zentao_id" class="input-small" value="${TProjectInstance?.zentao_id}" />
+    <g:textField name="zentao_id" class="input-small" value="${TProjectInstance?.zentao_id}"/>
 </div>
 
 <div class="fieldcontain ${hasErrors(bean: TProjectInstance, field: 'description', 'error')} ">
@@ -26,6 +34,8 @@
 
 <g:javascript src="ueditor/ueditor.config.js"></g:javascript>
 <g:javascript src="ueditor/ueditor.all.min.js"></g:javascript>
+<link type="text/css" rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
+<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 
 <script type="text/javascript">
     $(function () {
@@ -35,5 +45,10 @@
                 'link', 'unlink', 'anchor', '|']
         ]});
         editor.render("description");
+        $("#end_date_temp1").datepicker({
+            dateFormat: 'yy-mm-dd',
+            dayNamesMin: [ "日", "一", "二", "三", "四", "五", "六" ],
+            firstDay: 1
+        })
     });
 </script>

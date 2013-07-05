@@ -60,8 +60,8 @@
                     <thead>
                     <tr>
                         <th>${message(code: 'TLevel.title.label', default: '名称')}</th>
-                        <th>${message(code: 'TLevel.min_score.label', default: '最小分值')}</th>
-                        <th>${message(code: 'TLevel.coefficient.label', default: '系数')}</th>
+                        <th style="width:100px">${message(code: 'TLevel.min_score.label', default: '最小分值')}</th>
+                        %{--<th>${message(code: 'TLevel.coefficient.label', default: '系数')}</th>--}%
 
                         %{--<g:sortableColumn property="coefficient"--}%
                         %{--title="${message(code: 'TLevel.coefficient.label', default: 'Coefficient')}"/>--}%
@@ -91,9 +91,9 @@
                                         id="${TLevelInstance.id}">${fieldValue(bean: TLevelInstance, field: "title")}</g:link></td>
 
 
-                            <td>${fieldValue(bean: TLevelInstance, field: "min_score")}</td>
+                            <td style="text-align: right">${fieldValue(bean: TLevelInstance, field: "min_score")}</td>
 
-                            <td>${fieldValue(bean: TLevelInstance, field: "coefficient")}</td>
+                            %{--<td>${fieldValue(bean: TLevelInstance, field: "coefficient")}</td>--}%
 
                         </tr>
                     </g:each>

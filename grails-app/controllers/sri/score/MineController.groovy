@@ -18,16 +18,38 @@ class MineController {
 
 
     def index() {
+        flash.menu_flag = "mine"
+
         def q_param = [:]
-        def cond = "from TIssue as ti where ti.user_id=:uid and xtype=:type"
+        def cond = "from TIssue as ti where ti.user_id=:uid and ti.xtype=:type order by ti.id desc"
         int me_id = session.user?.id ?: 0
         q_param.put("uid", me_id)
         q_param.put("type", Constants.PROJECTTYPES_TASK)
 
-        flash.menu_flag = "mine"
-        def mytasks = TIssue.findAll(cond, q_param, [max: 20, sort: "id", order: 'desc'])
+        def mytasks = TIssue.findAll(cond, q_param, [max: 20])
         def approve_count = TProject.countByApproverAndXstatusAndXtype(me_id, Constants.PROJECTSTATUS_OUTSTANDING, Constants.PROJECTTYPES_TASK);
+        def score_count = TProject.countByApproverAndXstatusAndXtype(me_id, Constants.PROJECTSTATUS_APPROVED, Constants.PROJECTTYPES_TASK);
 
+        Calendar calFrom = Calendar.getInstance()
+        calFrom.set(Calendar.MINUTE, 0)
+        calFrom.set(Calendar.HOUR, 0)
+        calFrom.set(Calendar.SECOND, 0)
+        calFrom.set(Calendar.DAY_OF_MONTH, 1)
+
+        Calendar calTo = Calendar.getInstance()
+        calTo.set(Calendar.MINUTE, 0)
+        calTo.set(Calendar.HOUR, 0)
+        calTo.set(Calendar.SECOND, 0)
+        calTo.set(Calendar.DAY_OF_MONTH, 1)
+        calTo.set(Calendar.MONTH, calTo.get(Calendar.MONTH) + 1)
+
+        def month_issues = TIssue.findAll("from TIssue as ti where ti.user_id=:uid and ti.xstatus=:status and ti.create_date>=:start_date and ti.create_date<:end_date and ti.xtype <> :attend",
+                [uid: me_id, status: Constants.PROJECTSTATUS_SCORED, start_date: calFrom.getTime(), end_date: calTo.getTime(), attend:Constants.PROJECTTYPES_LEVEL])
+
+        def score_month = month_issues.sum { obj ->
+            obj.score
+        }
+        def score_month_minus = month_issues.findAll{obj->obj.score<0}.sum{obj->obj.score}
 
 
         def q_param_project = [:]
@@ -36,26 +58,51 @@ class MineController {
         q_param_project.put("type", Constants.PROJECTTYPES_TASK)
         def myprojects = TProject.findAll(cond_project, q_param_project, [max: 50, order: "desc", sort: "id"]);
 
-        def myissues = TIssue.findAllByUser_idAndXstatusAndScoreGreaterThanEquals(me_id, Constants.PROJECTSTATUS_SCORED, 0, [max:20, sort:"id", order:"desc"])
-        def myissues_minus = TIssue.findAllByUser_idAndXstatusAndScoreLessThan(me_id, Constants.PROJECTSTATUS_SCORED, 0, [max:20, sort:"id", order:"desc"])
+        def myissues = TIssue.findAllByUser_idAndXstatusAndScoreGreaterThanEquals(me_id, Constants.PROJECTSTATUS_SCORED, 0, [max: 20, sort: "id", order: "desc"])
+        def myissues_minus = TIssue.findAllByUser_idAndXstatusAndScoreLessThan(me_id, Constants.PROJECTSTATUS_SCORED, 0, [max: 20, sort: "id", order: "desc"])
 
 
 
-        [mytasks: mytasks, approve_count: approve_count, myprojects: myprojects,myissues:myissues, myissues_minus:myissues_minus]
+        [mytasks: mytasks, approve_count: approve_count, score_count: score_count, score_month: score_month,  score_month_minus:score_month_minus,
+                myprojects: myprojects, myissues: myissues, myissues_minus: myissues_minus]
     }
 
 
     def tasks(Integer max) {
         def q_param = [:]
-        def cond = "from TIssue as ti where ti.user_id=:uid and xtype=:type"
+        def cond = "from TIssue as ti where ti.user_id=:uid and ti.xtype=:type"
         int me_id = session?.user?.id ?: 0
         q_param.put("uid", me_id)
         q_param.put("type", Constants.PROJECTTYPES_TASK)
 
-        max = Math.min(max ?: 10, 100)
+        params.max = Math.min(max ?: 20, 100)
 
-        [TIssueInstanceList: TIssue.findAll(cond, q_param, [max: max, sort: "id", order: 'desc']),
-                TIssueInstanceTotal: TIssue.countByUser_id(me_id)]
+        [TIssueInstanceList: TIssue.findAll(cond + " order by ti.id desc", q_param, params),
+                TIssueInstanceTotal: TIssue.countByUser_idAndXtype(me_id, Constants.PROJECTTYPES_TASK)]
+    }
+
+    def issues(String id,  Integer max) {
+        def q_param = [:]
+        def cond = "from TIssue as ti where ti.user_id=:uid and ti.xstatus=:sts"
+        int me_id = session?.user?.id ?: 0
+        q_param.put("uid", me_id)
+        q_param.put("sts", Constants.PROJECTSTATUS_SCORED)
+        def total = 0
+        params.max = Math.min(max ?: 20, 100)
+
+        if (id=="up"){
+            cond+= " and ti.score>=0"
+            total =  TIssue.countByUser_idAndXstatusAndScoreGreaterThanEquals(me_id, Constants.PROJECTSTATUS_SCORED, 0)
+        }   else if (id=="down"){
+            cond+= " and ti.score<0"
+            total =  TIssue.countByUser_idAndXstatusAndScoreLessThan(me_id, Constants.PROJECTSTATUS_SCORED, 0)
+        }
+        else{
+            total =  TIssue.countByUser_idAndXstatus(me_id, Constants.PROJECTSTATUS_SCORED)
+        }
+
+        [TIssueInstanceList: TIssue.findAll(cond + " order by ti.id desc", q_param, params),
+                TIssueInstanceTotal: total]
     }
 
     def query_user(String q, int tp) {
@@ -79,10 +126,17 @@ class MineController {
         render sb
     }
 
-    def approve_list(){
+    def approve_list() {
         int me_id = session.user?.id ?: 0
         def TProjectInstanceList = TProject.findAllByApproverAndXtypeAndXstatus(me_id, Constants.PROJECTTYPES_TASK, Constants.PROJECTSTATUS_OUTSTANDING)
-        [TProjectInstanceList:TProjectInstanceList]
+        [TProjectInstanceList: TProjectInstanceList]
     }
+
+    def score_project_list() {
+        int me_id = session.user?.id ?: 0
+        def TProjectInstanceList = TProject.findAllByApproverAndXtypeAndXstatus(me_id, Constants.PROJECTTYPES_TASK, Constants.PROJECTSTATUS_APPROVED)
+        [TProjectInstanceList: TProjectInstanceList]
+    }
+
 
 }

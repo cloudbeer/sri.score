@@ -59,6 +59,7 @@
                     <tr>
                         <th>${message(code: 'TProject.code.label', default: 'Code')}</th>
                         <th>${message(code: 'TProject.title.label', default: '名称')}</th>
+                        <th>分值</th>
                         <th style="width:150px">操作</th>
                     </tr>
                     </thead>
@@ -67,6 +68,29 @@
                         <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
                             <td>${fieldValue(bean: TProjectInstance, field: "code")}</td>
                             <td>${fieldValue(bean: TProjectInstance, field: "title")}</td>
+                            <td>
+                                <%
+
+                                    def xlevels = []
+                                    def myScores = allScores.findAll { obj ->
+                                        obj.project_id == TProjectInstance.id
+                                    }
+                                    myScores.each { obj ->
+                                        xlevels.add(obj.score)
+                                    }
+
+
+                                %>
+                                <g:each in="${xlevels}" var="xscore" status="ists">
+                                    <g:if test="${ists % 5 == 0}">
+                                        [
+                                    </g:if>
+                                    ${xscore}
+                                    <g:if test="${ists % 5 == 4}">
+                                        ]
+                                    </g:if>
+                                </g:each>
+                            </td>
                             <td>
                                 <g:link action="project_score" class='btn min btn-primary'
                                         id="${fieldValue(bean: TProjectInstance, field: "id")}">

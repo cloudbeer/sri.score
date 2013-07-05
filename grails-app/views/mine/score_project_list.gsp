@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta name="layout" content="main">
-    <g:set var="entityName" value="${message(code: 'TProject.label', default: 'TProject')}"/>
+    <g:set var="entityName" value="等待算分的任务包"/>
     <title><g:message code="default.list.label" args="[entityName]"/></title>
 </head>
 
@@ -48,12 +48,10 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th style="text-align: center">${message(code: 'TProject.title.label', default: '名称')}</th>
-                        <th style="width:120px;text-align: center">${message(code: 'TProject.pre_score.label', default: '分值')}</th>
-                        <th style="text-align: center">${message(code: 'TProject.manager.label', default: '负责人')}</th>
-                        <th style="text-align: center">${message(code: 'TProject.approver.label', default: '审批')}</th>
-                        <th style="text-align: center">预计日期</th>
-                        <th style="text-align: center">完成日期</th>
+                        <th>${message(code: 'TProject.title.label', default: '名称')}</th>
+                        <th>${message(code: 'TProject.pre_score.label', default: '预估分值')}</th>
+                        <th>${message(code: 'TProject.manager.label', default: '经理')}</th>
+                        <th>${message(code: 'TProject.xstatus.label', default: 'Status')}</th>
                         <th>禅道</th>
                     </tr>
                     </thead>
@@ -63,18 +61,15 @@
 
                             <td><g:link action="show" controller="TProject"
                                         id="${TProjectInstance.id}">${fieldValue(bean: TProjectInstance, field: "title")}</g:link></td>
-                            <td style="text-align: right">${fieldValue(bean: TProjectInstance, field: "pre_score")}</td>
-                            <td style="text-align: center"><g:usernick
-                                    user_id="${fieldValue(bean: TProjectInstance, field: "manager")}"></g:usernick>
-                            </td>
-                            <td style="text-align: center">
+                            <td>${fieldValue(bean: TProjectInstance, field: "pre_score")}</td>
+                            <td>
                                 <g:usernick
-                                        user_id="${fieldValue(bean: TProjectInstance, field: "approver")}"></g:usernick>
+                                        user_id="${fieldValue(bean: TProjectInstance, field: "manager")}"></g:usernick>
                             </td>
-                            <td><g:formatDate date="${TProjectInstance.end_date1}"
-                                              format="yyyy-MM-dd"></g:formatDate></td>
-                            <td><g:formatDate date="${TProjectInstance.end_date2}"
-                                              format="yyyy-MM-dd"></g:formatDate></td>
+                            <td>
+                                <g:projectstatus
+                                        status="${fieldValue(bean: TProjectInstance, field: "xstatus")}"></g:projectstatus>
+                            </td>
                             <td>
                                 <a href="http://srt.skyworth.com/bugs/www/index.php?m=project&f=task&t=html&projectID=${TProjectInstance?.id}&type=all"
                                    target="_blank">点击查看</a>
@@ -84,10 +79,6 @@
                     </g:each>
                     </tbody>
                 </table>
-
-                <div class="pagination">
-                    <g:paginate total="${TProjectInstanceTotal}"/>
-                </div>
 
             </div>
 

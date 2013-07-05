@@ -1,5 +1,7 @@
 package sri.score
 
+import sri.score.common.Constants
+
 class HomeController {
 
     def afterInterceptor = {
@@ -14,8 +16,12 @@ class HomeController {
 
 
     def browse() {
-        def projects = TProject.list(max:20, order:"desc", sort: "id")
+        def projects = TProject.findAllByXtype(Constants.PROJECTTYPES_TASK , [max:40, order:"desc", sort: "id"])
+        def top10Users = TUser.list([max:10, sort:'score', order: 'desc'])
 
-        [projects: projects]
+        def cal = Calendar.getInstance()
+
+
+        [projects: projects, top10Users:top10Users]
     }
 }

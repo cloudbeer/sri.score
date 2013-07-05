@@ -10,15 +10,15 @@ class TGroup {
     int updater
     String title
     int parent_id
-    int leader
+    int leader     = 0
     static constraints = {
         title blank: false
         xtype display: false
         xstatus display: false
         create_date display: false
-        creator display: false
-        update_date display: false
-        updater display: false
+        creator display: false      , nullable: true
+        update_date display: false  , nullable: true
+        updater display: false        , nullable: true
         leader display: false
     }
 }

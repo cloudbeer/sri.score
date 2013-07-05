@@ -19,17 +19,25 @@ class TProject {
     int manager = 0
     String comment = ""
     long zentao_id = 0
+    Date end_date1
+    Date end_date2
 
     static constraints = {
         title blank: false
-        description maxSize: 20000
+        description maxSize: 20000, nullable: true
         xtype display: false
         xstatus display: false
         create_date display: false
-        creator display: false
-        update_date display: false
-        updater display: false
+        creator display: false, nullable: true
+        update_date display: false, nullable: true
+        updater display: false, nullable: true
+        end_date1 nullable: true
+        end_date2 nullable: true
 
+    }
+    static mapping = {
+        comment type: 'text'
+        description type: 'text'
     }
 
     def is_manager(user) {

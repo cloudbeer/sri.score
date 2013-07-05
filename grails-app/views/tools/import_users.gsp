@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta name="layout" content="main">
-    <g:set var="entityName" value="考勤"/>
+    <g:set var="entityName" value="导入用户"/>
     <title>${entityName}</title>
 </head>
 
@@ -12,7 +12,7 @@
 <div class="page-heading">
     <h2 class="page-title muted">
         <i class="icon-tasks"></i>
-        ${entityName}   Excel示范文件中木有时间标记呢，如何不重复？
+       ${entityName}
     </h2>
 
     <div class="page-info hidden-phone">
@@ -53,18 +53,15 @@
             <!-- widget content -->
             <div class="widget-content">
 
-                <g:uploadForm name="form1" controller="TSys" action="save_attendance_excel">
+                <g:uploadForm name="form1" action="save_users">
                     <fieldset>
-                        <label>请选择考勤 Excel 文件：</label>
+                        <label>请选择 Excel 文件：</label>
 
                         <input type="file" name="xlsFile" accept="application/vnd.ms-excel" class="span6 fancy"
                                id="upl"/>
-                        <label>时间：</label>
-                        <g:textField name="xyear" class="input-small"></g:textField>年
-                        <g:textField name="xmonth" class="input-small"></g:textField>月
 
                     </fieldset>
-                    <g:submitButton name="btnImportAttendence" value="上载并分析" class="btn btn-primary"></g:submitButton>
+                    <g:submitButton name="btnImportAttendence" value="上载并保存" class="btn btn-primary"></g:submitButton>
 
                 </g:uploadForm>
 

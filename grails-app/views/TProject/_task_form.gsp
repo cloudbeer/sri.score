@@ -53,6 +53,7 @@
 
 </div>
 <script type="text/javascript">
+    var cur_task_id=0;
     $(function () {
         $("#d_user").hide();
         $("#btnSaveTask").click(function () {
@@ -72,7 +73,7 @@
                 return;
             }
             $.post("<g:createLink controller="TIssue" action="save_task" />",
-                    {title: is_title, score: is_score, user_id: is_user_id,
+                    {title: is_title, score: is_score, user_id: is_user_id,  id:cur_task_id,
                         project_id: ${TProjectInstance?.id}, xtype: ${Constants.PROJECTTYPES_TASK}},
                     function (res) {
                         if (res=="1"){

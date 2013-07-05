@@ -37,21 +37,21 @@
                 <a href="#"><i class="icon-large icon-search"></i></a>
             </li>
             <li>
-                <a href="#">
+                <a href="http://srt.skyworth.com/">
                     <i class="icon-large icon-globe"></i>
                 </a>
             </li>
             <li>
-                <a href="#">
-                    <i class="icon-large icon-envelope"></i>
+                <a href="http://srt.skyworth.com/bugs/www/index.php?m=company&f=browse">
+                    <i class="icon-large icon-twitter"></i>
                 </a>
             </li>
 
-            <li>
-                <a href="#">
-                    <i class="icon-large icon-cog"></i>
-                </a>
-            </li>
+            %{--<li>--}%
+                %{--<a href="#">--}%
+                    %{--<i class="icon-large icon-cog"></i>--}%
+                %{--</a>--}%
+            %{--</li>--}%
         </ul>
 
         <ul class="nav pull-right">
@@ -65,22 +65,21 @@
                 <ul class="dropdown-menu dropdown-user-account">
 
                     <li class="account-img-container">
-                        <img class="thumb account-img"
-                             src="http://b.zol-img.com.cn/soft/6_120x90/408/ceHc4ZoyYxgME.gif"/>
+                        <g:img class="thumb account-img" uri="/images/no_avatar_100.png"></g:img>
                     </li>
 
                     <li class="account-info">
                         <h3>${session.user?.nick}</h3>
-
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-
+                        <p>
+                            这是我的简介
+                        </p>
                     </li>
 
                     <li class="account-footer">
                         <div class="row-fluid">
 
                             <div class="span8">
-                                <a class="btn btn-small btn-primary btn-flat" href="#">更换头像</a>
+                                <a class="btn btn-small btn-primary btn-flat" href="#">更新资料</a>
                             </div>
 
                             <div class="span4 align-right">
@@ -96,11 +95,11 @@
             <!-- ./ dropdown user account -->
         </ul>
 
-        <!-- search form -->
+        <!-- search form
         <form class="navbar-search pull-right hidden-phone" action=""/>
         <input type="text" class="search-query span4" placeholder="search..."/>
     </form>
-        <!-- ./ search form -->
+        -- ./ search form -->
     </div>
 </div>
 <!-- end header -->
@@ -117,7 +116,7 @@
     <ul id="sidebar" class="nav nav-pills nav-stacked">
         <li class="avatar hidden-phone">
             <a href="#">
-                <img src="http://image.ladypk.com/face/user/82/40/82406_55">
+                <g:img class="thumb account-img" uri="/images/no_avatar_55.png"></g:img>
                 <span>${session.user?.nick}</span>
             </a>
         </li>
@@ -201,6 +200,12 @@
                         <g:link controller="TSys" action="config">
                             <i class="icon-large micon-cog"></i>
                             系统配置
+                        </g:link>
+                    </li>
+                    <li>
+                        <g:link controller="TSys" action="temp_import">
+                            <i class="icon-large micon-cog"></i>
+                            各种导入
                         </g:link>
                     </li>
                 </ul>

@@ -14,7 +14,7 @@ class TUser {
     String nick
     String password = ""
     String salt = ""
-    String email = "a@a.com"
+    String email = ""
     long ref_id = 0
     String user_code = ""
     int level_id = 1
@@ -45,14 +45,4 @@ class TUser {
         return xtype == Constants.USERTYPES_APPROVER
     }
 
-    def update_level() {
-        def levels = TLevel.list([sort: "min_score", order: 'desc'])
-        def xlevel = levels.find { obj ->
-            score >= obj.min_score
-        }
-        if (xlevel) {
-            TUser.executeUpdate("update TUser set level_id=:level_id where id=:id", ["level_id": xlevel."id", id: id])
-        }
-        //return xlevel.title
-    }
 }

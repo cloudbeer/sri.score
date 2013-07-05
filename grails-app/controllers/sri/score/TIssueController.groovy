@@ -1,19 +1,20 @@
 package sri.score
 
+import grails.converters.JSON
 import org.springframework.dao.DataIntegrityViolationException
 
 class TIssueController {
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
-    def beforeInterceptor ={
+    def beforeInterceptor = {
         if (!session.user) {
             redirect(action: 'login', controller: 'account')
             return false
         }
     }
     def afterInterceptor = {
-        flash.menu_flag="sys"
+        flash.menu_flag = "sys"
     }
 
     def index() {
@@ -41,7 +42,19 @@ class TIssueController {
     }
 
     def save_task() {
-        def TIssueInstance = new TIssue(params)
+        def TIssueInstance
+        def xid = params.id?.toLong()
+        if (xid > 0) {
+            TIssueInstance = TIssue.get(xid)
+            TIssueInstance.updater = session?.user?.id ?: 0
+            TIssueInstance.update_date = new Date()
+            TIssueInstance.properties = params
+        } else {
+            TIssueInstance = new TIssue(params)
+            TIssueInstance.creator = session.user?.id ?: 0
+        }
+
+
         if (!TIssueInstance.save(flush: true)) {
             render 0
             return
@@ -51,6 +64,7 @@ class TIssueController {
         render 1
 
     }
+
     def remove_task() {
         def task_id = params.task_id?.toLong()
         def TIssueInstance = TIssue.get(task_id)
@@ -136,5 +150,12 @@ class TIssueController {
             flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'TIssue.label', default: 'TIssue'), id])
             redirect(action: "show", id: id)
         }
+    }
+
+    def get_task(long task_id) {
+        def task = TIssue.get(task_id)
+        def xuser = TUser.get(task.user_id)
+        def res = [title: task.title, score: task.score, user_id: task.user_id, nick: xuser.nick]
+        render res as JSON
     }
 }

@@ -18,17 +18,20 @@ class TIssue {
     long ref_issue = 0
 
     static constraints = {
-        title blank: false
+        title blank: false, size: 0..300
         xtype display: false
         xstatus display: false
         create_date display: false
         creator display: false
-        update_date display: false
-        updater display: false
-        project_id display: false
-        updater display: false
-        ref_user display: false
-        ref_issue display: false
+        update_date display: false         , nullable: true
+        updater display: false            , nullable: true
+        project_id display: false        , nullable: true
+        updater display: false             , nullable: true
+        ref_user display: false         , nullable: true
+        ref_issue display: false   , nullable: true
         score display: false
+    }
+    static mapping = {
+        description type: "text"
     }
 }

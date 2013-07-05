@@ -17,7 +17,7 @@
     </div>
 </g:if>
 <g:form action="logon" controller="account">
-    Email: <g:textField name="email"></g:textField>
+    Email: <g:textField name="email" value="xie@coocaa.com"></g:textField>
     <g:submitButton name="btnSubmit" value="登录"></g:submitButton>
 </g:form>
 

@@ -5,6 +5,7 @@ table.show {
 table.show tr {
     padding: 5px;
 }
+
 table.show tr:hover {
     background: #eee;
 }
@@ -16,8 +17,29 @@ table.show tr .key {
     color: #333;
     font-weight: bold
 }
+
 table.show tr .key:after {
     content: ': '
 }
+
 table.show tr .value {
+}
+
+table.table .even{
+    background: #eee;
+}
+
+.pagination .currentStep {
+    font-weight: bold;
+    background: #eee;
+    border: 1px solid #ccc;
+    padding: 4px;
+    margin: 2px;
+
+}
+
+.pagination .step, .nextLink, .prevLink {
+    border: 1px solid #ccc;
+    padding: 4px;
+    margin: 1px;
 }

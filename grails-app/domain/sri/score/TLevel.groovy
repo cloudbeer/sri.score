@@ -13,6 +13,7 @@ class TLevel {
     String method = ""
     BigDecimal coefficient = 1.0
     String score_config = ""
+    int flag_id = 0
 
     static constraints = {
         title blank: false
@@ -21,5 +22,8 @@ class TLevel {
         score_config blank: true
         coefficient min: 1.0
         min_score min: 0
+    }
+    static mapping = {
+        score_config type: "text"
     }
 }
