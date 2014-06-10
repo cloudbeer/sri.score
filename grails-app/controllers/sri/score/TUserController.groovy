@@ -3,12 +3,13 @@ package sri.score
 import org.springframework.dao.DataIntegrityViolationException
 
 class TUserController {
+    HelperService helperService
 
     static allowedMethods = [save: "POST", update: "POST", delete: "POST"]
 
     def beforeInterceptor = {
         if (!session.user) {
-            redirect(action: 'login', controller: 'account')
+            redirect(action: 'to_login', controller: 'account')
             return false
         }
         if (!session.user.is_admin()) {
@@ -29,8 +30,38 @@ class TUserController {
     }
 
     def list(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
-        [TUserInstanceList: TUser.list(params), TUserInstanceTotal: TUser.count()]
+        params.max = Math.min(max ?: 40, 100)
+//        params.order = "desc"
+//        params.sort = "id"
+
+        def q_param = [:]
+        def cond = "from TUser where 1=1"
+        if (params.key) {
+            cond += " and (Email like :key or Nick like :key)"
+            q_param.put('key', '%' + params.key + '%')
+        }
+
+        def ds_count = TUser.executeQuery("select count(*) as cnt " + cond, q_param)
+        int xcount = 0
+        if (ds_count)
+            xcount = ds_count[0]
+
+
+        def groups = TGroup.list()
+        def rtn = new StringBuilder()
+        helperService.recursionGroupHtml(groups, 0, rtn)
+
+
+        [TUserInstanceList: TUser.findAll(cond, q_param, params), TUserInstanceTotal: xcount, groupHTML: rtn, groups:groups]
+    }
+
+
+    def set_group(int user_id, int group_id){
+        def user = TUser.get(user_id)
+        user.group_id=group_id
+        user.save()
+
+        render 1
     }
 
     def create() {
@@ -39,7 +70,20 @@ class TUserController {
 
     def save() {
         def TUserInstance = new TUser(params)
-        TUserInstance.creator = session.user?.id?:0
+        TUserInstance.creator = session.user?.id ?: 0
+
+//        if (TUserInstance.id > 0) {    //表示是在更新
+//            if (TUser.findByNickOrUser_codeOrEmail(TUserInstance.nick, TUserInstance.user_code, TUserInstance.email)) {
+//                flash.message = "姓名，工号和Email不能重复"
+//                return redirect(action: "edit", id: TUserInstance.id)
+//            }
+//        }
+//        else{
+//            if (TUser.findByNickOrUser_codeOrEmail(TUserInstance.nick, TUserInstance.user_code, TUserInstance.email)) {
+//                flash.message = "姓名，工号和Email不能重复"
+//                return redirect(action: "edit", id: TUserInstance.id)
+//            }
+//        }
         if (!TUserInstance.save(flush: true)) {
             render(view: "create", model: [TUserInstance: TUserInstance])
             return
@@ -51,7 +95,7 @@ class TUserController {
 
     def set_type(int id, int type) {
         def TUserInstance = TUser.get(id)
-        TUserInstance.updater = session.user?.id?:0
+        TUserInstance.updater = session.user?.id ?: 0
         TUserInstance.xtype = type
         try {
             TUserInstance.save()

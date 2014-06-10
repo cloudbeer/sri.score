@@ -41,9 +41,7 @@
         </form>
 
         <div class="alert alert-block" id='d_user'>
-            <a class="close" href="#" onclick="$('#d_user').hide('slow');"><i class="icon-large icon-remove-circle"></i>
-            </a>
-            <span id='c_users'></span>
+            <ul id='c_users' class="c_users"></ul>
         </div>
     </div>
 
@@ -73,7 +71,7 @@
                 return;
             }
             $.post("<g:createLink controller="TIssue" action="save_task" />",
-                    {title: is_title, score: is_score, user_id: is_user_id,  id:cur_task_id,
+                    {title: is_title, pre_score: is_score, user_id: is_user_id,  id:cur_task_id,
                         project_id: ${TProjectInstance?.id}, xtype: ${Constants.PROJECTTYPES_TASK}},
                     function (res) {
                         if (res=="1"){
@@ -94,7 +92,7 @@
                     });
 
         });
-        $(document).on("click", "#c_users span", function () {
+        $(document).on("click", "#c_users li", function () {
             var myID = $(this).attr("rel");
             $("#is_user_query").val( $(this).html());
             $("#is_user_id").val(myID);
@@ -105,13 +103,19 @@
     });
 </script>
 <style>
-#c_users span:hover {
+.c_users {
+    padding: 0;
+    margin: 0;
+}
+
+.c_users li:hover {
     color: #00ee00;
 }
 
-#c_users span {
+.c_users li {
+    list-style: none;
+    display: inline-block;
     padding: 2px 4px;
     cursor: pointer;
-    white-space: nowrap;
 }
 </style>

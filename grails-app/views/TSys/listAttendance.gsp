@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta name="layout" content="main">
-    <g:set var="entityName" value="得分纪录"/>
+    <g:set var="entityName" value="考勤纪录"/>
     <title><g:message code="default.list.label" args="[entityName]"/></title>
 </head>
 
@@ -12,7 +12,7 @@
 <div class="page-heading">
     <h2 class="page-title muted">
         <i class="icon-tasks"></i>
-        <g:message code="default.list.label" args="[entityName]"/>
+       ${entityName} @ ${key}
     </h2>
 
 </div>
@@ -21,7 +21,7 @@
         <span class="divider"><i class="icon-caret-right"></i></span>
     </li>
     <li>
-        得分纪录
+        ${entityName}
     </li>
 </ul>
 
@@ -50,8 +50,6 @@
                         <th>${message(code: 'TIssue.title.label', default: '名称')}</th>
                         <th>${message(code: 'TIssue.score.label', default: '预估分值')}</th>
                         <th>用户</th>
-                        <th>任务包</th>
-                        <th>${message(code: 'TIssue.description.label', default: '说明')}</th>
                         <th>状态</th>
                     </tr>
                     </thead>
@@ -66,23 +64,12 @@
                                         user_id="${fieldValue(bean: TIssueInstance, field: "user_id")}"></g:usernick>
                             </td>
                             <td>
-                                <g:link controller="TProject" action="show" id="${TIssueInstance.project_id}">
-                                    <g:projectname
-                                            project_id="${fieldValue(bean: TIssueInstance, field: "project_id")}"></g:projectname>
-                                </g:link>
-                            </td>
-                            <td>${fieldValue(bean: TIssueInstance, field: "description")}</td>
-                            <td>
                                 <g:projectstatus status="${TIssueInstance.xstatus}"></g:projectstatus>
                             </td>
                         </tr>
                     </g:each>
                     </tbody>
                 </table>
-
-                <div class="pagination">
-                    <g:paginate total="${TIssueInstanceTotal}"/>
-                </div>
 
             </div>
 

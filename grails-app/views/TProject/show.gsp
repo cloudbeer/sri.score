@@ -12,10 +12,10 @@
 <body>
 
 <%
-    def canModi = TProjectInstance.xstatus == Constants.PROJECTSTATUS_OUTSTANDING && (session.user.is_admin() || TProjectInstance.is_manager(session.user) || TProjectInstance.is_approver(session.user))
+    def canModi = TProjectInstance.xstatus == Constants.PROJECTSTATUS_OUTSTANDING && (session.user.is_admin() || TProjectInstance.is_manager(session.user) || TProjectInstance.is_creator(session.user))
     def canApprove = TProjectInstance.xstatus == Constants.PROJECTSTATUS_OUTSTANDING && (session.user.is_admin() || TProjectInstance.is_approver(session.user))
-    def canScore = TProjectInstance.xstatus == Constants.PROJECTSTATUS_APPROVED && (session.user.is_admin() || TProjectInstance.is_approver(session.user)) && TProjectInstance.end_date2
-    def canFinish = TProjectInstance.xstatus == Constants.PROJECTSTATUS_APPROVED && (session.user.is_admin() || TProjectInstance.is_manager(session.user)) && !TProjectInstance.end_date2
+    def canScore = TProjectInstance.xstatus == Constants.PROJECTSTATUS_FINISHED && (session.user.is_admin() || TProjectInstance.is_approver(session.user))
+    def canFinish = TProjectInstance.xstatus == Constants.PROJECTSTATUS_APPROVED && (TProjectInstance.is_manager(session.user)) && !TProjectInstance.end_date2
 %>
 
 
@@ -87,13 +87,13 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="key">负责人</td>
+                        <td class="key"><g:message code="TProject.manager.label"></g:message></td>
                         <td class="value">
                             <g:usernick user_id="${TProjectInstance?.manager}"></g:usernick>
                         </td>
                     </tr>
                     <tr>
-                        <td class="key">审批经理</td>
+                        <td class="key"><g:message code="TProject.approver.label"></g:message></td>
                         <td class="value">
                             <g:usernick user_id="${TProjectInstance?.approver}"></g:usernick>
                         </td>
@@ -186,8 +186,9 @@
                     <thead>
                     <tr>
                         <th style="text-align: center">任务名称</th>
-                        <th style="text-align: center">分值</th>
                         <th style="text-align: center">用户</th>
+                        <th style="text-align: center">预计</th>
+                        <th style="text-align: center">得分</th>
                         <g:if test="${canModi}">
                             <th style="width: 80px;text-align: center">管理</th>
                         </g:if>
@@ -200,10 +201,12 @@
                             <td>${fieldValue(bean: tasksInstance, field: "title")}</td>
 
 
-                            <td style="text-align: right;font-weight: bold;font-size: 16px;">${fieldValue(bean: tasksInstance, field: "score")}</td>
-
                             <td><g:usernick
                                     user_id="${fieldValue(bean: tasksInstance, field: "user_id")}"></g:usernick></td>
+
+                            <td style="text-align: right;font-weight: bold;font-size: 16px;">${fieldValue(bean: tasksInstance, field: "pre_score")}</td>
+
+                            <td style="text-align: right;font-weight: bold;font-size: 16px;">${fieldValue(bean: tasksInstance, field: "score")}</td>
 
                             <g:if test="${canModi}">
                                 <td style="text-align: center">
@@ -284,11 +287,15 @@
             </g:if>
             <g:if test="${canScore}">
                 <div class="button-action">
-                    <a href="#give_score_form" class="btn btn-large btn-danger" id="btnGiveScore"
-                       role="button" data-toggle="modal"><span><i
+                %{--<a href="#give_score_form" class="btn btn-large btn-danger" id="btnGiveScore"--}%
+                %{--role="button" data-toggle="modal"><span><i--}%
+                %{--class="icon-large icon-pencil"></i>--}%
+                %{--</span>分值结算--}%
+                %{--</a>--}%
+                    <g:link action="give_score" id="${TProjectInstance?.id}" class="btn btn-large btn-danger"><span><i
                             class="icon-large icon-pencil"></i>
                     </span>分值结算
-                    </a>
+                    </g:link>
                 </div>
                 <g:render template="form_score"></g:render>
             </g:if>

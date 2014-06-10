@@ -8,7 +8,7 @@ class TLevelController {
 
     def beforeInterceptor ={
         if (!session.user) {
-            redirect(action: 'login', controller: 'account')
+            redirect(action: 'to_login', controller: 'account')
             return false
         }
         if (!session.user.is_admin()) {

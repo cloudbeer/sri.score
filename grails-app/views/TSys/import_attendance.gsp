@@ -34,8 +34,7 @@
 </ul>
 
 <div class="row-fluid">
-    <div class="span12">
-
+    <div class="span6">
         <!-- widget -->
         <div class="well widget">
             <!-- widget header -->
@@ -78,6 +77,70 @@
             </div>
 
         </div>
+    </div>
+
+    <div class="span3">
+        <!-- widget -->
+        <div class="well widget">
+            <!-- widget header -->
+            <div class="widget-header">
+                <h3 class="title">考勤记录 @${year}年</h3>
+
+                <div class="widget-nav">
+                    <ul class="nav nav-pills">
+                        <li></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- ./ widget header -->
+
+            <!-- widget content -->
+            <div class="widget-content">
+                <ul>
+                    <g:each in="${12..1}" var="month">
+                        <li>
+                            <g:link action="listAttendance" params="${[key: '' + year + '-' + month]}">
+                                ${year}年${month}月
+                            </g:link>
+                        </li>
+                    </g:each>
+
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="span3">
+        <!-- widget -->
+        <div class="well widget">
+            <!-- widget header -->
+            <div class="widget-header">
+                <h3 class="title">考勤记录@${year - 1}年</h3>
+
+                <div class="widget-nav">
+                    <ul class="nav nav-pills">
+                        <li></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- ./ widget header -->
+
+            <!-- widget content -->
+            <div class="widget-content">
+                <ul>
+                    <g:each in="${12..1}" var="month">
+                        <li>
+                            <g:link action="listAttendance" params="${[key: '' + (year - 1) + '-' + month]}">
+                                ${year - 1}年${month}月
+                            </g:link>
+                        </li>
+                    </g:each>
+
+                </ul>
+            </div>
+        </div>
+
     </div>
 </div>
 

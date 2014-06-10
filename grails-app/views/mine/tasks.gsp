@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta name="layout" content="main">
-    <g:set var="entityName" value="${message(code: 'TIssue.label', default: 'TIssue')}"/>
+    <g:set var="entityName" value="我的任务"/>
     <title><g:message code="default.list.label" args="[entityName]"/></title>
 </head>
 
@@ -21,7 +21,7 @@
         <span class="divider"><i class="icon-caret-right"></i></span>
     </li>
     <li>
-        ${message(code: 'TIssue.label', default: 'TIssue')}
+        <g:message code="default.list.label" args="[entityName]"/>
     </li>
 </ul>
 
@@ -50,7 +50,7 @@
                         <th>${message(code: 'TIssue.title.label', default: '名称')}</th>
                         <th>${message(code: 'TIssue.score.label', default: '预估分值')}</th>
                         <th>用户</th>
-                        <th>所属项目</th>
+                        <th>所属任务包</th>
                         <th>状态</th>
                     </tr>
                     </thead>

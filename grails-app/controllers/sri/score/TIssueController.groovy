@@ -9,7 +9,7 @@ class TIssueController {
 
     def beforeInterceptor = {
         if (!session.user) {
-            redirect(action: 'login', controller: 'account')
+            redirect(action: 'to_login', controller: 'account')
             return false
         }
     }
@@ -59,7 +59,7 @@ class TIssueController {
             render 0
             return
         }
-        TProject.executeUpdate("update TProject set pre_score=(select sum(score) from TIssue where project_id=?) where id=?",
+        TProject.executeUpdate("update TProject set pre_score=(select sum(pre_score) from TIssue where project_id=?) where id=?",
                 [TIssueInstance.project_id, TIssueInstance.project_id])
         render 1
 
@@ -70,8 +70,8 @@ class TIssueController {
         def TIssueInstance = TIssue.get(task_id)
         try {
             TIssueInstance.delete(flush: true)
-            TProject.executeUpdate("update TProject set pre_score=(select sum(score) from TIssue where project_id=?) where id=?",
-                    [TIssueInstance.project_id, TIssueInstance.project_id])
+            TProject.executeUpdate("update TProject set pre_score=pre_score-? where id=?",
+                    [TIssueInstance.score, TIssueInstance.project_id])
             render 1
             return
 

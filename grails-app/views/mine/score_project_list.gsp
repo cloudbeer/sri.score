@@ -33,13 +33,6 @@
             <div class="widget-header">
                 <h3 class="title"><g:message code="default.list.label" args="[entityName]"/></h3>
 
-                <div class="widget-nav">
-                    <ul class="nav nav-pills">
-                        <li><g:link class="btn btn-flat btn-mini" action="create"><g:message
-                                code="default.create.label"
-                                args="[entityName]"/></g:link></li>
-                    </ul>
-                </div>
             </div>
             <!-- ./ widget header -->
 

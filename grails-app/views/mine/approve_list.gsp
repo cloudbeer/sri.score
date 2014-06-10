@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta name="layout" content="main">
-    <g:set var="entityName" value="${message(code: 'TProject.label', default: 'TProject')}"/>
+    <g:set var="entityName" value="待审批任务包"/>
     <title><g:message code="default.list.label" args="[entityName]"/></title>
 </head>
 
@@ -33,13 +33,6 @@
             <div class="widget-header">
                 <h3 class="title"><g:message code="default.list.label" args="[entityName]"/></h3>
 
-                <div class="widget-nav">
-                    <ul class="nav nav-pills">
-                        <li><g:link class="btn btn-flat btn-mini" action="create"><g:message
-                                code="default.create.label"
-                                args="[entityName]"/></g:link></li>
-                    </ul>
-                </div>
             </div>
             <!-- ./ widget header -->
 

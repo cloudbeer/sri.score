@@ -43,7 +43,14 @@ class TProject {
     def is_manager(user) {
         if (!user)
             return false
-        if (user.id == creator || user.id == manager)
+        if (user.id == manager)
+            return true
+        return false
+    }
+    def is_creator(user) {
+        if (!user)
+            return false
+        if (user.id == creator)
             return true
         return false
     }

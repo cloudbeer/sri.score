@@ -17,7 +17,11 @@
     </div>
 </g:if>
 <g:form action="logon" controller="account">
-    Email: <g:textField name="email" value="xie@coocaa.com"></g:textField>
+    Email: <g:textField name="email" value="admin@skyworth.com"></g:textField>
+    <br/>
+    密码:  <g:passwordField name="pwd"></g:passwordField>
+    <br/>
+    <br/>
     <g:submitButton name="btnSubmit" value="登录"></g:submitButton>
 </g:form>
 

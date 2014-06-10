@@ -32,7 +32,7 @@
 
                 <div class="widget-nav">
                     <ul class="nav nav-pills">
-                        <li><g:link class="btn btn-flat"  controller="Home" action="create">更多...</g:link></li>
+                        <li><g:link class="btn btn-flat" controller="Home" action="projects">更多...</g:link></li>
                     </ul>
                 </div>
             </div>
@@ -55,19 +55,25 @@
                     <g:each in="${projects}" status="i" var="TProjectInstance">
                         <tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
 
-                            <td><g:link action="show"  controller="TProject"
+                            <td><g:link action="show" controller="TProject"
                                         id="${TProjectInstance.id}">${fieldValue(bean: TProjectInstance, field: "title")}</g:link></td>
                             <td style="text-align: right">${fieldValue(bean: TProjectInstance, field: "pre_score")}</td>
-                            <td style="text-align: center"><g:usernick user_id="${fieldValue(bean: TProjectInstance, field: "manager")}" ></g:usernick>
-                                </td>
-                            <td style="text-align: center">
-                                <g:usernick user_id="${fieldValue(bean: TProjectInstance, field: "approver")}" ></g:usernick>
+                            <td style="text-align: center"><g:usernick
+                                    user_id="${fieldValue(bean: TProjectInstance, field: "manager")}"></g:usernick>
                             </td>
-                            <td><g:formatDate date="${TProjectInstance.end_date1}" format="yyyy-MM-dd"></g:formatDate></td>
-                            <td><g:formatDate date="${TProjectInstance.end_date2}" format="yyyy-MM-dd"></g:formatDate></td>
                             <td style="text-align: center">
-                                <a href="http://srt.skyworth.com/bugs/www/index.php?m=project&f=task&t=html&projectID=${TProjectInstance?.id}&type=all"
-                                   target="_blank">查看</a>
+                                <g:usernick
+                                        user_id="${fieldValue(bean: TProjectInstance, field: "approver")}"></g:usernick>
+                            </td>
+                            <td><g:formatDate date="${TProjectInstance.end_date1}"
+                                              format="yyyy-MM-dd"></g:formatDate></td>
+                            <td><g:formatDate date="${TProjectInstance.end_date2}"
+                                              format="yyyy-MM-dd"></g:formatDate></td>
+                            <td style="text-align: center">
+                                <g:if test="${TProjectInstance?.zentao_id > 0}">
+                                    <a href="http://srt.skyworth.com/bugs/www/index.php?m=project&f=task&t=html&projectID=${TProjectInstance?.zentao_id}&type=all"
+                                       target="_blank">查看</a>
+                                </g:if>
                             </td>
 
                         </tr>
@@ -82,13 +88,13 @@
     <div class="span4">
         <div class="well widget">
             <div class="widget-header">
-                <h3 class="title">本周得分Top10</h3>
+                <h3 class="title">周得分 Top20 (过去7天)</h3>
 
-                %{--<div class="widget-nav">--}%
-                    %{--<ul class="nav nav-pills">--}%
-                        %{--<li><g:link class="btn btn-flat"  controller="Home" action="create">更多...</g:link></li>--}%
-                    %{--</ul>--}%
-                %{--</div>--}%
+                <div class="widget-nav">
+                    <ul class="nav nav-pills">
+                        <li><g:link class="btn btn-flat" controller="home" action="rank">更多...</g:link></li>
+                    </ul>
+                </div>
             </div>
 
             <div class="widget-content">
@@ -100,27 +106,25 @@
                         <th style="width:100px;text-align: center">得分</th>
                     </tr>
                     </thead>
-                <tbody>
-                    <g:each in="${top10Users}" var="u" status="i" >
+                    <tbody>
+                    <g:each in="${top10Week}" var="u" status="i">
                         <tr>
-                            <td style="text-align: right;font-weight: bold">${i+1}</td>
-                            <td>${u.nick}</td>
-                            <td  style="text-align: right">${u.score}</td>
+                            <td style="text-align: right;font-weight: bold">${i + 1}</td>
+                            <td>
+                                <g:usernick user_id="${u.user_id}"></g:usernick>
+                            </td>
+                            <td style="text-align: right">${u.total}</td>
                         </tr>
-                        </tbody>
                     </g:each>
+                    </tbody>
                 </table>
             </div>
         </div>
+
         <div class="well widget">
             <div class="widget-header">
-                <h3 class="title">本月得分 Top10</h3>
+                <h3 class="title">本月得分 Top20</h3>
 
-                %{--<div class="widget-nav">--}%
-                    %{--<ul class="nav nav-pills">--}%
-                        %{--<li><g:link class="btn btn-flat"  controller="Home" action="create">更多...</g:link></li>--}%
-                    %{--</ul>--}%
-                %{--</div>--}%
             </div>
 
             <div class="widget-content">
@@ -132,26 +136,28 @@
                         <th style="width:100px;text-align: center">得分</th>
                     </tr>
                     </thead>
-                <tbody>
-                    <g:each in="${top10Users}" var="u" status="i" >
+                    <tbody>
+                    <g:each in="${top10Month}" var="u" status="i">
                         <tr>
-                            <td style="text-align: right;font-weight: bold">${i+1}</td>
-                            <td>${u.nick}</td>
-                            <td  style="text-align: right">${u.score}</td>
+                            <td style="text-align: right;font-weight: bold">${i + 1}</td>
+                            <td>
+                                <g:usernick user_id="${u.user_id}"></g:usernick></td>
+                            <td style="text-align: right">${u.total}</td>
                         </tr>
-                        </tbody>
                     </g:each>
+                    </tbody>
                 </table>
             </div>
         </div>
+
         <div class="well widget">
             <div class="widget-header">
                 <h3 class="title">总分 Top10</h3>
 
                 %{--<div class="widget-nav">--}%
-                    %{--<ul class="nav nav-pills">--}%
-                        %{--<li><g:link class="btn btn-flat"  controller="Home" action="create">更多...</g:link></li>--}%
-                    %{--</ul>--}%
+                %{--<ul class="nav nav-pills">--}%
+                %{--<li><g:link class="btn btn-flat"  controller="Home" action="create">更多...</g:link></li>--}%
+                %{--</ul>--}%
                 %{--</div>--}%
             </div>
 
@@ -164,14 +170,14 @@
                         <th style="width:100px;text-align: center">总分</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <g:each in="${top10Users}" var="u" status="i" >
-                    <tr>
-                        <td style="text-align: right;font-weight: bold">${i+1}</td>
-                        <td>${u.nick}</td>
-                        <td  style="text-align: right">${u.score}</td>
-                    </tr>
-                    </tbody>
+                <tbody>
+                    <g:each in="${top10Users}" var="u" status="i">
+                        <tr>
+                            <td style="text-align: right;font-weight: bold">${i + 1}</td>
+                            <td>${u.nick}</td>
+                            <td style="text-align: right">${u.score}</td>
+                        </tr>
+                        </tbody>
                     </g:each>
                 </table>
             </div>

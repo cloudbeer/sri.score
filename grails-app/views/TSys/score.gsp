@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta name="layout" content="main">
-    <g:set var="entityName" value="事物积分"/>
+    <g:set var="entityName" value="事务积分"/>
     <title><g:message code="default.list.label" args="[entityName]"/></title>
 </head>
 
@@ -105,18 +105,25 @@
             <!-- widget header -->
             <div class="widget-header">
                 <h3 class="title">查看概况</h3>
-
-                <div class="widget-nav">
-                    <ul class="nav nav-pills">
-                        <li></li>
-                    </ul>
-                </div>
             </div>
             <!-- ./ widget header -->
 
             <!-- widget content -->
             <div class="widget-content">
                 <div id='xpre_score'></div>
+            </div>
+        </div>
+        <div class="well widget">
+            <!-- widget header -->
+            <div class="widget-header">
+                <h3 class="title">批量导入</h3>
+
+            </div>
+            <!-- ./ widget header -->
+
+            <!-- widget content -->
+            <div class="widget-content">
+
             </div>
         </div>
     </div>

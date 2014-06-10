@@ -14,16 +14,16 @@ class TUser {
     String nick
     String password = ""
     String salt = ""
-    String email = ""
+    String email
     long ref_id = 0
-    String user_code = ""
+    String user_code
     int level_id = 1
     BigDecimal score = 0
     int group_id = 0
 
     static constraints = {
-        nick blank: false
-        email email: true
+        nick blank: false, nullable: true
+        email email: true, unique: true, nullable: true
         salt blank: true
         xtype display: false
         xstatus display: false
@@ -35,6 +35,7 @@ class TUser {
         updater display: false
         score display: false
         group_id display: false
+        user_code  unique: true, nullable: true
     }
 
     def is_admin() {

@@ -7,6 +7,7 @@
     <meta name="description" content=""/>
     <meta name="author" content="SRI"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon">
     <g:javascript src="jquery.min.js"></g:javascript>
     <r:require modules="bootstrap"/>
     <r:require modules="kuta_css"/>
@@ -37,20 +38,20 @@
                 <a href="#"><i class="icon-large icon-search"></i></a>
             </li>
             <li>
-                <a href="http://srt.skyworth.com/">
+                <a href="http://srt.skyworth.com/" target="_blank">
                     <i class="icon-large icon-globe"></i>
                 </a>
             </li>
             <li>
-                <a href="http://srt.skyworth.com/bugs/www/index.php?m=company&f=browse">
-                    <i class="icon-large icon-twitter"></i>
+                <a href="http://srt.skyworth.com/bugs/www/index.php?m=company&f=browse" target="_blank">
+                    <i class="icon-large icon-tasks"></i>
                 </a>
             </li>
 
             %{--<li>--}%
-                %{--<a href="#">--}%
-                    %{--<i class="icon-large icon-cog"></i>--}%
-                %{--</a>--}%
+            %{--<a href="#">--}%
+            %{--<i class="icon-large icon-cog"></i>--}%
+            %{--</a>--}%
             %{--</li>--}%
         </ul>
 
@@ -70,8 +71,9 @@
 
                     <li class="account-info">
                         <h3>${session.user?.nick}</h3>
+
                         <p>
-                            这是我的简介
+
                         </p>
                     </li>
 
@@ -79,7 +81,7 @@
                         <div class="row-fluid">
 
                             <div class="span8">
-                                <a class="btn btn-small btn-primary btn-flat" href="#">更新资料</a>
+                                %{--<a class="btn btn-small btn-primary btn-flat" href="#">更新资料</a>--}%
                             </div>
 
                             <div class="span4 align-right">
@@ -126,26 +128,6 @@
                 <span class="hidden-phone">仪表盘</span>
             </g:link>
         </li>
-        <li class="dropdown" rel="project">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <i class="micon-dribbble"></i>
-                <span class="hidden-phone">任务</span>
-            </a>
-            <ul class="dropdown-menu">
-                <li>
-                    <g:link controller="TProject" action="list">
-                        <i class="icon-large micon-dribbble"></i>
-                        任务包管理
-                    </g:link>
-                </li>
-                <li>
-                    <g:link controller="Mine" action="tasks">
-                        <i class="icon-large icon-tasks"></i>
-                        我的任务
-                    </g:link>
-                </li>
-            </ul>
-        </li>
         <g:if test="${session.user?.is_admin()}">
             <li class="dropdown" rel="sys">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -156,7 +138,7 @@
                     <li>
                         <g:link controller="TSys" action="score">
                             <i class="icon-large micon-seven-segment-9"></i>
-                            事物积分
+                            事务积分
                         </g:link>
                     </li>
                     <li>
@@ -208,9 +190,56 @@
                             各种导入
                         </g:link>
                     </li>
+                    <li>
+                        <g:link controller="analysis" action="logs">
+                            <i class="icon-large micon-search-2"></i>
+                            积分日志查询
+                        </g:link>
+                    </li>
+                    <li>
+                        <g:link controller="analysis" action="total">
+                            <i class="icon-large micon-star-2"></i>
+                            积分统计
+                        </g:link>
+                    </li>
                 </ul>
             </li>
         </g:if>
+
+        <li class="dropdown" rel="project">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <i class="micon-dribbble"></i>
+                <span class="hidden-phone">任务</span>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <g:link controller="TProject" action="list">
+                        <i class="icon-large micon-dribbble"></i>
+                        任务包管理
+                    </g:link>
+                </li>
+                <li>
+                    <g:link controller="Mine" action="tasks">
+                        <i class="icon-large icon-tasks"></i>
+                        我的任务
+                    </g:link>
+                </li>
+                <li>
+                    <g:link controller="Home" action="rank">
+                        <i class="icon-large icon-tasks"></i>
+                        增量积分排行
+                    </g:link>
+                </li>
+                <g:if test="${session.user?.is_approver() || session.user?.is_admin()}">
+                    <li>
+                    <g:link controller="analysis" action="approvers">
+                        <i class="icon-large micon-user"></i>
+                        审批人查询
+                    </g:link>
+                </g:if>
+            </li>
+            </ul>
+        </li>
     </ul>
     <!-- end sidebar -->
 </div>

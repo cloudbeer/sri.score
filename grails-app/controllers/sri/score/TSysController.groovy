@@ -7,12 +7,14 @@ import jxl.Workbook
 import sri.score.common.Constants
 import sri.score.common.Helper
 
+import java.text.SimpleDateFormat
+
 class TSysController {
     HelperService helperService
 
     def beforeInterceptor = {
         if (!session.user) {
-            redirect(action: 'login', controller: 'account')
+            redirect(action: 'to_login', controller: 'account')
             return false
         }
         if (!session.user.is_admin()) {
@@ -82,6 +84,15 @@ class TSysController {
         redirect(action: "projects")
     }
 
+    def delete_project(long id) {
+        if (id > 0) {
+            TLevelProjectScore.executeUpdate("delete from TLevelProjectScore where project_id=" + id)
+            TProject.executeUpdate("delete from TProject where id=" + id)
+        }
+
+        render "1"
+    }
+
     def project_score(long id) {
         def levels = TLevel.list([order: 'asc', sort: 'min_score'])
         //[TProjectInstance: TProject.get(id), levels: levels]
@@ -111,6 +122,9 @@ class TSysController {
     }
 
     def import_attendance() {
+        def cal = Calendar.getInstance()
+
+        [year: cal.get(Calendar.YEAR)]
 
     }
 
@@ -162,7 +176,7 @@ class TSysController {
                 def addDay = sheet.getCell(20, rowIndex).getContents()
                 //println addDay
                 if (code && day) {
-                    prep_dict.put("code", code)
+                    prep_dict.put("code", code?.toLowerCase())
                     //prep_dict.put("nick", nick)
                     prep_dict.put("days", day?.toBigDecimal())
                     prep_dict.put("addDays", addDay?.toBigDecimal())
@@ -179,10 +193,11 @@ class TSysController {
             helperService.import_attendance(all, year, month)
             flash.message = "考勤导入成功。"
         } catch (Exception e) {
-            throw e
-            //flash.message = e.dump() + ".."
+            def emsg = e.cause.message
+            flash.message = emsg
+            return redirect(action: "import_attendance")
         }
-        return redirect(controller: "Message", action: "tips")
+        return redirect(action: "listAttendance", params: [key: "" + year + "-" + month])
 
 
     }
@@ -229,11 +244,11 @@ class TSysController {
     }
 
     def score() {
-        def q_param = [:]
-        def cond = "from TProject as ti where xtype=:type"
-        q_param.put("type", Constants.PROJECTTYPES_STATIC)
+//        def q_param = [:]
+//        def cond = "from TProject as ti where ti.xtype=:type and ti.code<>'Z1'"
+//        q_param.put("type", Constants.PROJECTTYPES_STATIC)
 
-        [projects: TProject.findAllByXtype(Constants.PROJECTTYPES_STATIC, [sort: "code"])]
+        [projects: TProject.findAllByXtypeAndCodeNotEqual(Constants.PROJECTTYPES_STATIC, 'Z1', [sort: "code"])]
     }
 
     def score_save() {
@@ -292,19 +307,19 @@ class TSysController {
         Sheet sheet = workbook.getSheet(0);
         int rowCount = sheet.getRows()
         def all = []
-        for (rowIndex in 3..rowCount - 1) {
+        for (rowIndex in 2..rowCount - 1) {
             //render rowIndex
             try {
                 def prep_dict = [:]
-                def nick = sheet.getCell(5, rowIndex).getContents()
-                def user_code = sheet.getCell(6, rowIndex).getContents()
-                def email = sheet.getCell(7, rowIndex).getContents()
-                def level = sheet.getCell(8, rowIndex).getContents()
-                if (user_code && nick && email && level) {
+                def nick = sheet.getCell(3, rowIndex).getContents()
+                //def user_code = "" // sheet.getCell(6, rowIndex).getContents()
+                def email = sheet.getCell(4, rowIndex).getContents()
+                def level = sheet.getCell(5, rowIndex).getContents() ?: "0"
+                if (nick && email) {
                     if (email.endsWith("@")) {
                         email = email + "skyworth.com"
                     }
-                    prep_dict.put("user_code", user_code)
+                    prep_dict.put("user_code", null)
                     prep_dict.put("nick", nick)
                     prep_dict.put("email", email)
                     prep_dict.put("user_name", email)
@@ -312,14 +327,21 @@ class TSysController {
                     all.add(prep_dict)
                 }
             } catch (e) {
-
+                throw e
             }
         }
 
 //        render all as JSON
 //        return
-        helperService.import_users(all)
-        flash.message = "用户导入成功"
+        try {
+            helperService.import_users(all)
+            flash.message = "用户导入成功"
+        } catch (e) {
+            render e as JSON
+            return
+
+            //flash.message = e.cause.message
+        }
         return redirect(controller: "message", action: "tips")
 
     }
@@ -399,6 +421,134 @@ class TSysController {
 
     }
 
+    def save_temp_task() {
+        def f = request.getFile("xlsFile")
+        if (f.empty) {
+            flash.message = '必须输入一个符合格式的 Excel 文件。'
+            redirect(action: "temp_import")
+            return
+        }
+        String fileName = f.originalFilename
+
+        def formatter = new SimpleDateFormat("yyyy-MM-dd");
+        def fromDate
+        try {
+            fromDate = formatter.parse(fileName)
+        } catch (e) {
+            flash.message = "错误的文件名，请重命名如：2013-07-05"
+            return redirect(controller: "message", action: "tips")
+        }
+
+
+        Workbook workbook = Workbook.getWorkbook(f.getInputStream())
+        Sheet sheet = workbook.getSheet(0);
+        int rowCount = sheet.getRows()
+        def p_title = sheet.getCell(0, 3).getContents()
+
+        def zengXianhuiID = 61
+
+        TProject project = new TProject()
+        project.title = p_title
+        project.manager = zengXianhuiID
+        project.approver = zengXianhuiID
+        project.end_date1 = fromDate
+        project.end_date2 = fromDate
+        project.update_date = fromDate
+        project.xstatus = Constants.PROJECTSTATUS_SCORED
+        project.xtype = Constants.PROJECTTYPES_TASK
+
+        project.save()
+
+
+        def projectSum = 0
+        def msg = new StringBuilder()
+        for (rowIndex in 3..rowCount - 1) {
+            try {
+
+                def p_nick = sheet.getCell(1, rowIndex).getContents()
+                def t_title = sheet.getCell(2, rowIndex).getContents()
+                def score_up = 0
+                try {
+                    score_up = sheet.getCell(3, rowIndex).getContents()?.toInteger() ?: 0
+                } catch (e) {}
+                def score_down = 0
+                try {
+                    score_down = sheet.getCell(4, rowIndex).getContents()?.toInteger() ?: 0
+                } catch (e) {}
+
+                def xuser = TUser.findByNick(p_nick.trim())
+
+                if (xuser) {
+                    def xsum = score_up + score_down
+                    TIssue issue = new TIssue()
+                    issue.project_id = project.id
+                    issue.title = t_title
+                    issue.score = xsum
+                    projectSum += xsum
+                    issue.user_id = xuser.id;
+                    issue.update_date = fromDate
+                    issue.pre_score = xsum
+                    issue.xstatus = Constants.PROJECTSTATUS_SCORED
+                    issue.xtype = Constants.PROJECTTYPES_TASK
+                    issue.save()
+
+                    xuser.score = xuser.score + xsum
+                    xuser.save()
+                    Helper.update_level(xuser)
+
+                    msg.append(p_nick.trim() + " 导入成功 <br />")
+                } else {
+                    msg.append(p_nick.trim() + " 没有找到 <br />")
+                }
+
+            } catch (e) {
+                throw e
+
+            }
+
+        }
+        project.pre_score = projectSum
+        project.save()
+        msg.append("导入成功！")
+        flash.message = msg.toString()
+        return redirect(controller: "message", action: "tips")
+
+
+    }
+
+    def save_user_code() {
+        def f = request.getFile("xlsFile")
+        if (f.empty) {
+            flash.message = '必须输入一个符合格式的 Excel 文件。'
+            redirect(action: "temp_import")
+            return
+        }
+
+
+        Workbook workbook = Workbook.getWorkbook(f.getInputStream())
+        Sheet sheet = workbook.getSheet(0);
+        int rowCount = sheet.getRows()
+
+        for (rowIndex in 2..rowCount - 1) {
+            try {
+                def code = sheet.getCell(1, rowIndex).getContents()
+                def name = sheet.getCell(2, rowIndex).getContents()
+
+                def xuser = TUser.findByNick(name)
+                if (xuser) {
+                    xuser.user_code = code.toLowerCase()
+                    xuser.save()
+                }
+            } catch (e) {
+
+            }
+        }
+        //return
+        flash.message = "员工工号更新成功"
+        return redirect(controller: "message", action: "tips")
+
+    }
+
     def query_pre_score(long pid, int uid) {
         StringBuilder sb = new StringBuilder()
 
@@ -415,12 +565,54 @@ class TSysController {
         sb.append("<tr><td class='key'>姓名</td><td class='value'>" + u.nick + "</td></tr>")
         sb.append("<tr><td class='key'>总分</td><td class='value'>" + u.score + "</td></tr>")
         sb.append("<tr><td class='key'>等级</td><td class='value'>" + level.title + "</td></tr>")
-        sb.append("<tr><td class='key'>将要发生的</td><td class='value'>" +p.title + "</td></tr>")
-        sb.append("<tr><td class='key'>分数</td><td class='value'>" +my_score.score + "</td></tr>")
+        sb.append("<tr><td class='key'>将要发生的</td><td class='value'>" + p.title + "</td></tr>")
+        sb.append("<tr><td class='key'>分数</td><td class='value'>" + my_score.score + "</td></tr>")
         sb.append("</table>")
 
         render sb
 
+    }
+
+    def config() {
+        def configs = TSiteConfig.list()
+//        render configs
+//        return
+        [configs: configs]
+    }
+
+    def save_config() {
+
+        params.each { k, v ->
+            if (k.startsWith("CFG_")) {
+                //String x = "1"
+                def lK = k.substring(4)
+                def xConfig = TSiteConfig.findByXkey(lK);
+                if (!xConfig) {
+                    xConfig = new TSiteConfig()
+                    xConfig.xkey = lK
+//                    print 'not find'
+                }
+                xConfig.xvalue = v
+                if (!xConfig.save(flush: true)) {
+                    //print 'error save'
+                }
+//                println lK
+//                println v
+            }
+        }
+
+        return redirect(action: 'config')
+    }
+
+    def listAttendance(String key) {
+        if (!key) {
+            Calendar cal = Calendar.getInstance();
+            key = "" + cal.get(Calendar.YEAR) + '-' + cal.get(Calendar.MONTH)
+            //println key
+        }
+        def atts = TIssue.findAllByXtypeAndTitleLike(Constants.PROJECTTYPES_ATTENDANCE, '%@' + key + '%')
+        //def atts = TIssue.findAllByXtype(Constants.PROJECTTYPES_ATTENDANCE)
+        [TIssueInstanceList: atts, key: key]
     }
 
 }

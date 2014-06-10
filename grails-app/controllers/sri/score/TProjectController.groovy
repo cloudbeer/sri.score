@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat
 
 class TProjectController {
 
-    static allowedMethods = [save: "POST", update: "POST"]
+    static allowedMethods = [save: "POST", update: "POST", give_score_save: "POST"]
     ProjectService projectService
 
     def afterInterceptor = {
@@ -15,7 +15,7 @@ class TProjectController {
     }
     def beforeInterceptor = {
         if (!session.user) {
-            redirect(action: 'login', controller: 'account')
+            redirect(action: 'to_login', controller: 'account')
             return false
         }
     }
@@ -28,7 +28,7 @@ class TProjectController {
     def list(Integer max) {
 
         def q_param = [:]
-        def cond = "from TProject as ti where (ti.creator=:uid or ti.manager=:uid) and xtype=:type"
+        def cond = "from TProject where (creator=:uid or manager=:uid) and xtype=:type"
         int me_id = session?.user?.id ?: 0
         q_param.put("uid", me_id)
         q_param.put("type", Constants.PROJECTTYPES_TASK)
@@ -39,8 +39,10 @@ class TProjectController {
             xcount = ds_count[0]
 
 
-        params.max = Math.min(max ?: 10, 100)
-        [TProjectInstanceList: TProject.findAll(cond, q_param, [max: 50, order: "desc", sort: "id"]),
+        params.max = Math.min(max ?: 40, 100)
+//        params.sort = "id"
+//        params.order = "asc"
+        [TProjectInstanceList: TProject.findAll(cond + " order by id desc", q_param, params),
                 TProjectInstanceTotal: xcount]
     }
 
@@ -54,7 +56,9 @@ class TProjectController {
 
     def save() {
         def TProjectInstance = new TProject(params)
-        TProjectInstance.end_date1 = Date.parse("y-M-d", params.end_date_temp1)
+        def formatter = new SimpleDateFormat("yyyy-MM-dd");
+        if (params.end_date_temp1)
+            TProjectInstance.end_date1 = formatter.parse(params.end_date_temp1)
         TProjectInstance.creator = session.user?.id ?: 0
         if (!TProjectInstance.save(flush: true)) {
             render(view: "create", model: [TProjectInstance: TProjectInstance])
@@ -165,6 +169,10 @@ class TProjectController {
 
     def save_approve(long project_id, String a_comment, int a_status) {
         def xproject = TProject.get(project_id)
+        if ((xproject.pre_score ?: 0) <= 0) {
+            render "该任务没有子任务，无法审批"
+            return
+        }
         def formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         String s_date = formatter.format(new Date());
         String xres = "审批未通过"
@@ -175,6 +183,7 @@ class TProjectController {
         xproject.comment += "<div class='a_comment'>" + a_comment + " [" + xres + "-" + s_date + "]" + "</div>"
 
         xproject.save()
+        TIssue.executeUpdate("update TIssue set xstatus=:sts where project_id=:pid", [sts: Constants.PROJECTSTATUS_APPROVED, pid: project_id])
         render 1
 
     }
@@ -187,10 +196,55 @@ class TProjectController {
     def set_finish(long id) {
         def project = TProject.get(id)
         if (project) {
+            project.xstatus = Constants.PROJECTSTATUS_FINISHED
             project.end_date2 = new Date()
             project.save()
+            TIssue.executeUpdate("update TIssue set xstatus=:sts where project_id=:pid", [sts: Constants.PROJECTSTATUS_FINISHED, pid: id])
+
         }
         render 1
+    }
+
+    def give_score(long id) {
+        if (!session.user.is_admin() && !session.user.is_approver()) {
+            flash.message = "您没有权限进行此操作"
+            return redirect(controller: "message", action: "tips")
+        }
+        def TProjectInstance = TProject.get(id)
+        def canScore = TProjectInstance.xstatus == Constants.PROJECTSTATUS_FINISHED && (session.user.is_admin() || TProjectInstance.is_approver(session.user))
+        if (!canScore) {
+            flash.message = "该任务包不能被您操作"
+            return redirect(controller: "message", action: "tips")
+        }
+
+        [TProjectInstance: TProjectInstance, tasks: TIssue.findAllByProject_id(id)]
+    }
+
+    def give_score_save(long id) {
+        if (!session.user.is_admin() && !session.user.is_approver()) {
+            flash.message = "您没有权限进行此操作"
+            return redirect(controller: "message", action: "tips")
+        }
+        def TProjectInstance = TProject.get(id)
+        def canScore = TProjectInstance.xstatus == Constants.PROJECTSTATUS_FINISHED && (session.user.is_admin() || TProjectInstance.is_approver(session.user))
+        if (!canScore) {
+            flash.message = "该任务包不能被您操作"
+            return redirect(controller: "message", action: "tips")
+        }
+
+
+
+        try {
+            projectService.give_score_custom(id, session.user.id, params)
+        }
+        catch (e) {
+            //throw e
+            flash.message = e.cause.message
+            return redirect(controller: "message", action: "tips")
+        }
+
+        flash.message = "发分完成"
+        return redirect(controller: "message", action: "tips")
     }
 
     def test() {

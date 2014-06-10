@@ -67,6 +67,8 @@ class HelperService {
 
     }
 
+
+
     void import_attendance(atts, int year, int month) {
 
         if (atts.size() <= 0) {
@@ -75,7 +77,7 @@ class HelperService {
         }
         TProject attPro = TProject.findByCode("Z1")
         if (!attPro) {
-            throw new Exception("没有Code为Z1的考勤等级，请首先导入等级。")
+            throw new Exception("没有Code为Z1的考勤分值，请导入事物积分表先。")
             return
         }
 
@@ -96,7 +98,7 @@ class HelperService {
                 }
                 if (tLevelProjectScore) {
                     def levelScore = tLevelProjectScore.score ?: 0
-                    def sumScore = levelScore * att.days ?: 0 + levelScore * att.addDays ?: 0
+                    def sumScore = (levelScore * att.days ?: 0) + (levelScore * att.addDays ?: 0)
                     def issue = new TIssue()
                     issue.score = sumScore
                     issue.title = "考勤 [出勤：" + att.days + ", 加班：" + att.addDays + "] @" + year + "-" + month
@@ -109,6 +111,26 @@ class HelperService {
                     me.save()
                     Helper.update_level(me)
                 }
+            }
+        }
+    }
+
+
+    void recursionGroupHtml(List<TGroup> groups, int parent_id, StringBuilder container) {
+        def myLevels = groups.findAll { grp ->
+            grp.parent_id == parent_id
+        }
+        //throw new Exception(""+myLevels.size())
+
+        if (myLevels.size() > 0) {
+            myLevels.each { grp ->
+                //myLevels.title = myLevels
+                container.append("<ul>")
+                container.append("<li>")
+                container.append("<a href='#' class='grp_name' data-id='" + grp.id + "'>"+grp.title+"</a>")
+                container.append("</li>")
+                recursionGroupHtml(groups, grp.id, container)
+                container.append("</ul>")
             }
         }
     }

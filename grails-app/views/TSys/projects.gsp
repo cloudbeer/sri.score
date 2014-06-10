@@ -3,8 +3,8 @@
 <html>
 <head>
     <meta name="layout" content="main">
-    <g:set var="entityName" value="${message(code: 'TProject_Static.label', default: 'TProject')}"/>
-    <title><g:message code="default.list.label" args="[entityName]"/></title>
+<g:set var="entityName" value="${message(code: 'TProject_Static.label', default: 'TProject')}"/>
+<title><g:message code="default.list.label" args="[entityName]"/></title>
 </head>
 
 <body>
@@ -12,17 +12,17 @@
 <div class="page-heading">
     <h2 class="page-title muted">
         <i class="icon-tasks"></i>
-        <g:message code="default.list.label" args="[entityName]"/>
-    </h2>
+<g:message code="default.list.label" args="[entityName]"/>
+</h2>
 
-    <div class="page-info hidden-phone">
-        <ul class="stats">
-            <li>
-                <span></span>
-            </li>
-        </ul>
+<div class="page-info hidden-phone">
+    <ul class="stats">
+        <li>
+            <span></span>
+        </li>
+    </ul>
 
-    </div>
+</div>
 </div>
 <ul class="breadcrumb breadcrumb-main">
     <li><a href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a>
@@ -60,7 +60,7 @@
                         <th>${message(code: 'TProject.code.label', default: 'Code')}</th>
                         <th>${message(code: 'TProject.title.label', default: '名称')}</th>
                         <th>分值</th>
-                        <th style="width:150px">操作</th>
+                        <th style="width:170px;text-align:center">操作</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -98,8 +98,12 @@
                                 </g:link>
                                 <g:link action="create_project" class='btn min btn-primary'
                                         id="${fieldValue(bean: TProjectInstance, field: "id")}">
-                                    修改
+                                    改
                                 </g:link>
+                                <a href="#" class='btn min btn-primary btnDelete'
+                                   rel="${fieldValue(bean: TProjectInstance, field: "id")}">
+                                    删
+                                </a>
                             </td>
 
                         </tr>
@@ -117,17 +121,34 @@
     </div>
 </div>
 
+<script type="text/javascript">
+    $(function () {
+        $(".btnDelete").click(function () {
+            if (!confirm("此操作将会删除所有的对应分值，请确认！"))
+                return;
+            var xthis = $(this);
+            $.post( "<g:createLink action="delete_project" />", {id:xthis.attr("rel")}, function(res){
+                if (res=="1"){
+                    xthis.parent().parent().remove();
+                }else{
+                    alert(res);
+                }
+            });
 
-<div id="list-TProject" class="content scaffold-list" role="main">
+        });
+    });
+</script>
 
-    <g:if test="${flash.message}">
-        <div class="alert alert-block alert-error">
-            <a class="close" data-dismiss="alert" href="#"><i class="icon-large icon-remove-circle"></i></a>
-            <h4 class="alert-heading"><g:message code="default.tip.label" default="出错了"/></h4>
-            ${flash.message}
-        </div>
-    </g:if>
+    <div id="list-TProject" class="content scaffold-list" role="main">
 
-</div>
-</body>
-</html>
+        <g:if test="${flash.message}">
+            <div class="alert alert-block alert-error">
+                <a class="close" data-dismiss="alert" href="#"><i class="icon-large icon-remove-circle"></i></a>
+                <h4 class="alert-heading"><g:message code="default.tip.label" default="出错了"/></h4>
+                ${flash.message}
+            </div>
+        </g:if>
+
+    </div>
+    </body>
+    </html>

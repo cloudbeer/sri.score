@@ -8,13 +8,5 @@
 		<span class="required-indicator">*</span>
 	</label>
 	<g:textField name="title" required="" value="${TGroupInstance?.title}"/>
+    <g:hiddenField name="parent_id" value="${TGroupInstance?.parent_id}"></g:hiddenField>
 </div>
-
-<div class="fieldcontain ${hasErrors(bean: TGroupInstance, field: 'parent_id', 'error')} required">
-	<label for="parent_id">
-		<g:message code="TGroup.parent_id.label" default="Parentid" />
-		<span class="required-indicator">*</span>
-	</label>
-	<g:field name="parent_id" type="number" value="${TGroupInstance.parent_id}" required=""/>
-</div>
-

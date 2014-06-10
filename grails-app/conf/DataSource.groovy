@@ -1,8 +1,8 @@
 dataSource {
     pooled = true
     driverClassName = "com.mysql.jdbc.Driver"
-    username = "root"
-    password = "zhwell"
+//    username = "jifen"
+//    password = "jifen!123"
 }
 hibernate {
     cache.use_second_level_cache = true
@@ -13,21 +13,35 @@ hibernate {
 environments {
     development {
         dataSource {
-            dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
-            //url = "jdbc:h2:mem:devDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
-            url = "jdbc:mysql://localhost/sri.score?useUnicode=true&amp;characterEncoding=UTF8 "
+            dbCreate = "" // one of 'create', 'create-drop', 'update', 'validate', ''
+            //正式服务器
+//            url = "jdbc:mysql://42.121.119.89/jifen?useUnicode=true&amp;characterEncoding=UTF8"
+//            username = "jifen"
+//            password = "jifen!123"
+            //测试服务器
+            //url = "jdbc:mysql://42.121.120.91/jifen?useUnicode=true&amp;characterEncoding=UTF8"
+            //username = "jifen"
+//            password = "1234567890"
+            //本地服务器
+            url = "jdbc:mysql://localhost/sri.score?useUnicode=true&amp;characterEncoding=UTF8"
+            username = "root"
+            password = "zhwell"
         }
     }
     test {
         dataSource {
-            dbCreate = "validate"
-            url = "jdbc:mysql://localhost/sri.score?useUnicode=true&amp;characterEncoding=UTF8 "
+            dbCreate = "update"
+            url = "jdbc:mysql://localhost/sri.point?useUnicode=true&amp;characterEncoding=UTF8"
         }
     }
     production {
         dataSource {
-            dbCreate = "validate"
-            url = "jdbc:mysql://localhost/sri.score?useUnicode=true&amp;characterEncoding=UTF8 "
+            dbCreate = ""
+            //url = "jdbc:mysql://42.121.120.91/jifen?useUnicode=true&amp;characterEncoding=UTF8"
+            //正式服务器
+            url = "jdbc:mysql://42.121.119.89/jifen?useUnicode=true&amp;characterEncoding=UTF8"
+            username = "jifen"
+            password = "jifen!123"
             pooled = true
             properties {
                maxActive = -1

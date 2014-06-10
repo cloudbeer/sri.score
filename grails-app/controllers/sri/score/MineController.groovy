@@ -10,7 +10,7 @@ class MineController {
     }
     def beforeInterceptor = {
         if (!session.user) {
-            redirect(action: 'login', controller: 'account')
+            redirect(action: 'to_login', controller: 'account')
             return false
         }
         flash.menu_flag = "project"
@@ -28,7 +28,8 @@ class MineController {
 
         def mytasks = TIssue.findAll(cond, q_param, [max: 20])
         def approve_count = TProject.countByApproverAndXstatusAndXtype(me_id, Constants.PROJECTSTATUS_OUTSTANDING, Constants.PROJECTTYPES_TASK);
-        def score_count = TProject.countByApproverAndXstatusAndXtype(me_id, Constants.PROJECTSTATUS_APPROVED, Constants.PROJECTTYPES_TASK);
+        def score_count = TProject.countByApproverAndXstatusAndXtype(me_id, Constants.PROJECTSTATUS_FINISHED, Constants.PROJECTTYPES_TASK);
+        def approved_count = TProject.countByApproverAndXstatusAndXtype(me_id, Constants.PROJECTSTATUS_APPROVED, Constants.PROJECTTYPES_TASK);
 
         Calendar calFrom = Calendar.getInstance()
         calFrom.set(Calendar.MINUTE, 0)
@@ -53,18 +54,20 @@ class MineController {
 
 
         def q_param_project = [:]
-        def cond_project = "from TProject as ti where (ti.creator=:uid or ti.manager=:uid) and xtype=:type"
+        def cond_project = "from TProject as ti where ti.manager=:uid and xtype=:type"
+        def cond_project_i_created = "from TProject as ti where ti.creator=:uid and xtype=:type"
         q_param_project.put("uid", me_id)
         q_param_project.put("type", Constants.PROJECTTYPES_TASK)
         def myprojects = TProject.findAll(cond_project, q_param_project, [max: 50, order: "desc", sort: "id"]);
+        def my_created_projects = TProject.findAll(cond_project_i_created, q_param_project, [max: 50, order: "desc", sort: "id"]);
 
         def myissues = TIssue.findAllByUser_idAndXstatusAndScoreGreaterThanEquals(me_id, Constants.PROJECTSTATUS_SCORED, 0, [max: 20, sort: "id", order: "desc"])
         def myissues_minus = TIssue.findAllByUser_idAndXstatusAndScoreLessThan(me_id, Constants.PROJECTSTATUS_SCORED, 0, [max: 20, sort: "id", order: "desc"])
 
 
 
-        [mytasks: mytasks, approve_count: approve_count, score_count: score_count, score_month: score_month,  score_month_minus:score_month_minus,
-                myprojects: myprojects, myissues: myissues, myissues_minus: myissues_minus]
+        [mytasks: mytasks, approve_count: approve_count,approved_count:approved_count, score_count: score_count, score_month: score_month,  score_month_minus:score_month_minus,
+                myprojects: myprojects, myissues: myissues, myissues_minus: myissues_minus, my_created_projects:my_created_projects]
     }
 
 
@@ -119,9 +122,9 @@ class MineController {
         def mUsers = TUser.findAll(cond, q_param, [max: 50]);
         StringBuilder sb = new StringBuilder();
         mUsers.each { xuser ->
-            sb.append("<span rel='" + xuser.id + "'>")
+            sb.append("<li rel='" + xuser.id + "'>")
             sb.append(xuser.nick)
-            sb.append("</span>")
+            sb.append("</li>")
         }
         render sb
     }
@@ -131,10 +134,15 @@ class MineController {
         def TProjectInstanceList = TProject.findAllByApproverAndXtypeAndXstatus(me_id, Constants.PROJECTTYPES_TASK, Constants.PROJECTSTATUS_OUTSTANDING)
         [TProjectInstanceList: TProjectInstanceList]
     }
+    def approved_list() {
+        int me_id = session.user?.id ?: 0
+        def TProjectInstanceList = TProject.findAllByApproverAndXtypeAndXstatus(me_id, Constants.PROJECTTYPES_TASK, Constants.PROJECTSTATUS_APPROVED)
+        [TProjectInstanceList: TProjectInstanceList]
+    }
 
     def score_project_list() {
         int me_id = session.user?.id ?: 0
-        def TProjectInstanceList = TProject.findAllByApproverAndXtypeAndXstatus(me_id, Constants.PROJECTTYPES_TASK, Constants.PROJECTSTATUS_APPROVED)
+        def TProjectInstanceList = TProject.findAllByApproverAndXtypeAndXstatus(me_id, Constants.PROJECTTYPES_TASK, Constants.PROJECTSTATUS_FINISHED)
         [TProjectInstanceList: TProjectInstanceList]
     }
 
